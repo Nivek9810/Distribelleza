@@ -5,6 +5,9 @@
  */
 package Vista;
 
+import Modelo.Excepciones;
+import java.io.IOException;
+
 /**
  *
  * @author user
@@ -13,9 +16,15 @@ public class JfMain extends javax.swing.JFrame {
 
     /**
      * Creates new form JfMain
-     */
+    */
+    private JifProducto objJifProducto;
+    private final Excepciones objExcepciones; 
+    
     public JfMain() {
         initComponents();
+         this.setExtendedState(JfMain.MAXIMIZED_BOTH);
+         this.objJifProducto = new JifProducto();
+         this.objExcepciones = new Excepciones();
     }
 
     /**
@@ -27,21 +36,110 @@ public class JfMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jdpEscritorio = new javax.swing.JDesktopPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMAccionProd = new javax.swing.JMenu();
+        jMINuevoProducto = new javax.swing.JMenuItem();
+        jMIEliminarProd = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMIVerProducto = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMCierre = new javax.swing.JMenu();
+        jMIGenerarCierre = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout jdpEscritorioLayout = new javax.swing.GroupLayout(jdpEscritorio);
+        jdpEscritorio.setLayout(jdpEscritorioLayout);
+        jdpEscritorioLayout.setHorizontalGroup(
+            jdpEscritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jdpEscritorioLayout.setVerticalGroup(
+            jdpEscritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 279, Short.MAX_VALUE)
+        );
+
+        jMenu1.setText("Producto");
+
+        jMAccionProd.setText("Acción");
+
+        jMINuevoProducto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMINuevoProducto.setText("Nuevo Producto");
+        jMINuevoProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMINuevoProductoActionPerformed(evt);
+            }
+        });
+        jMAccionProd.add(jMINuevoProducto);
+
+        jMIEliminarProd.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMIEliminarProd.setText("Eliminar Producto");
+        jMAccionProd.add(jMIEliminarProd);
+
+        jMenu1.add(jMAccionProd);
+        jMenu1.add(jSeparator2);
+
+        jMIVerProducto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMIVerProducto.setText("Ver Producto");
+        jMenu1.add(jMIVerProducto);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Cierre");
+
+        jMCierre.setText("Acción");
+
+        jMIGenerarCierre.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMIGenerarCierre.setText("Generar Cierre");
+        jMCierre.add(jMIGenerarCierre);
+
+        jMenu2.add(jMCierre);
+        jMenu2.add(jSeparator1);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jdpEscritorio)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jdpEscritorio)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMINuevoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMINuevoProductoActionPerformed
+        try {
+            confGen("Impuesto de Automóviles", 1);
+            //visibilidad(false, false);
+        } catch (IOException ex) {
+            System.out.println("Se ha generado la excepción: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_jMINuevoProductoActionPerformed
+
+    public void confGen(String Titulo, int Tipo) throws IOException {
+        objJifProducto = new JifProducto(Tipo, Titulo);
+        objExcepciones.controlaInstancia(objJifProducto, this.jdpEscritorio);
+        objJifProducto.setVisible(true);
+        objJifProducto.setClosable(true);
+        objJifProducto.setResizable(false);
+    }
+    public void visibilidad(boolean V1, boolean V2) {
+        //objJifProducto.cmbCilindraje.setVisible(V1);
+        //objJifProducto.cmbTipoSP.setVisible(V2);
+        //objJifProducto.lblCilindraje.setVisible(V1);
+        //objJifProducto.lblTSer.setVisible(V2);
+    }
+
 
     /**
      * @param args the command line arguments
@@ -57,16 +155,24 @@ public class JfMain extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JfMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JfMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JfMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JfMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JfMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -79,5 +185,17 @@ public class JfMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMAccionProd;
+    private javax.swing.JMenu jMCierre;
+    private javax.swing.JMenuItem jMIEliminarProd;
+    private javax.swing.JMenuItem jMIGenerarCierre;
+    private javax.swing.JMenuItem jMINuevoProducto;
+    private javax.swing.JMenuItem jMIVerProducto;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JDesktopPane jdpEscritorio;
     // End of variables declaration//GEN-END:variables
 }
