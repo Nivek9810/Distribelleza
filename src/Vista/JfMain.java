@@ -1,4 +1,5 @@
 /*
+
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -16,15 +17,17 @@ public class JfMain extends javax.swing.JFrame {
 
     /**
      * Creates new form JfMain
-    */
+     */
     private JifProducto objJifProducto;
-    private final Excepciones objExcepciones; 
-    
+    private JifFactura objJifFactura;
+    private final Excepciones objExcepciones;
+
     public JfMain() {
         initComponents();
-         this.setExtendedState(JfMain.MAXIMIZED_BOTH);
-         this.objJifProducto = new JifProducto();
-         this.objExcepciones = new Excepciones();
+        this.setExtendedState(JfMain.MAXIMIZED_BOTH);
+        this.objJifProducto = new JifProducto();
+        this.objJifFactura = new JifFactura();
+        this.objExcepciones = new Excepciones();
     }
 
     /**
@@ -48,6 +51,11 @@ public class JfMain extends javax.swing.JFrame {
         jMCierre = new javax.swing.JMenu();
         jMIGenerarCierre = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,6 +109,30 @@ public class JfMain extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu3.setText("Venta");
+
+        jMenu4.setText("Opciones");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Generar Factura");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem1);
+
+        jMenu3.add(jMenu4);
+
+        jMenu5.setText("Consultar");
+
+        jMenuItem2.setText("Ver Facturas");
+        jMenu5.add(jMenuItem2);
+
+        jMenu3.add(jMenu5);
+
+        jMenuBar1.add(jMenu3);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -126,20 +158,26 @@ public class JfMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMINuevoProductoActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        this.objJifFactura = new JifFactura("Mi factura");
+        this.objExcepciones.controlaInstancia(objJifFactura, this.jdpEscritorio);
+        this.objJifFactura.setVisible(true);
+        this.objJifFactura.setClosable(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     public void confGen(String Titulo, int Tipo) throws IOException {
         objJifProducto = new JifProducto(Tipo, Titulo);
         objExcepciones.controlaInstancia(objJifProducto, this.jdpEscritorio);
         objJifProducto.setVisible(true);
         objJifProducto.setClosable(true);
-        objJifProducto.setResizable(false);
     }
+
     public void visibilidad(boolean V1, boolean V2) {
         //objJifProducto.cmbCilindraje.setVisible(V1);
         //objJifProducto.cmbTipoSP.setVisible(V2);
         //objJifProducto.lblCilindraje.setVisible(V1);
         //objJifProducto.lblTSer.setVisible(V2);
     }
-
 
     /**
      * @param args the command line arguments
@@ -193,7 +231,12 @@ public class JfMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMIVerProducto;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JDesktopPane jdpEscritorio;
