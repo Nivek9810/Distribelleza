@@ -5,6 +5,12 @@
  */
 package Vista;
 
+import Controlador.DAO_Producto;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author user
@@ -32,7 +38,6 @@ public class JifFactura extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCalendar1 = new com.toedter.calendar.JCalendar();
         lblTitulo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         LblIdFactura = new javax.swing.JLabel();
@@ -58,6 +63,12 @@ public class JifFactura extends javax.swing.JInternalFrame {
         AreaProductos.setColumns(20);
         AreaProductos.setRows(5);
         jScrollPane1.setViewportView(AreaProductos);
+
+        TxtProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtProductoActionPerformed(evt);
+            }
+        });
 
         SpnCantidad.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
 
@@ -85,7 +96,7 @@ public class JifFactura extends javax.swing.JInternalFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(LblIdFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
+                        .addGap(35, 35, 35)
                         .addComponent(SpnFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblTitulo)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -108,11 +119,22 @@ public class JifFactura extends javax.swing.JInternalFrame {
                     .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnAgregar))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void TxtProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtProductoActionPerformed
+        JOptionPane.showMessageDialog(this, "Hola "+this.TxtProducto.getText());
+        try {
+            DAO_Producto objDataProducto=new DAO_Producto();
+            System.out.println("Datos nombre: "+objDataProducto.getSingleProducto(this.TxtProducto.getText()).getNombre());
+        } catch (SQLException ex) {
+            Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.TxtProducto.setText("");
+    }//GEN-LAST:event_TxtProductoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -122,7 +144,6 @@ public class JifFactura extends javax.swing.JInternalFrame {
     private javax.swing.JSpinner SpnCantidad;
     private javax.swing.JSpinner SpnFecha;
     private javax.swing.JTextField TxtProducto;
-    private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitulo;
