@@ -90,21 +90,19 @@ public class Excepciones {
      * Validación General: Devuelve una respuesta en la existencia de campos
      * vacios de un formulario en formato boolean.
      *
-     * @param txtN JTextField
-     * @param txtA JTextField
-     * @param txtId JTextField
-     * @param txtT JTextField
-     * @param txtP JTextField
-     * @param txtM JTextField
+     * @param Txt_Id_Prod JTextField
+     * @param Txt_Nombre JTextField
+     * @param Spn_Precio_Compra JSpinner
+     * @param Spn_Cantidad JSpinner
+     * @param Spn_Porcentaje_Venta JSpinner
      * @return boolean
      */
-    public boolean validarContenido(JTextField txtN, JTextField txtA, JTextField txtId, JTextField txtT, JTextField txtP, JTextField txtM) {
-        return (!txtN.getText().trim().equals("")
-                && !txtA.getText().trim().equals("")
-                && !txtId.getText().trim().equals("")
-                && !txtT.getText().trim().equals("")
-                && !txtP.getText().trim().equals("")
-                && !txtM.getText().trim().equals(""));
+    public boolean validarCamposProducto(JTextField Txt_Id_Prod, JTextField Txt_Nombre, JSpinner Spn_Precio_Compra, JSpinner Spn_Cantidad, JSpinner Spn_Porcentaje_Venta) {
+        return (!Txt_Id_Prod.getText().trim().equals("")
+                && !Txt_Nombre.getText().trim().equals("")
+                && Integer.parseInt(Spn_Precio_Compra.getValue().toString()) > 0
+                && Integer.parseInt(Spn_Cantidad.getValue().toString()) > 0
+                && Integer.parseInt(Spn_Porcentaje_Venta.getValue().toString()) > 0);
     }
 
     /**
@@ -113,21 +111,20 @@ public class Excepciones {
      * vacios erroneos de un formulario (demarcados por un color rojo) en
      * formato boolean.
      *
-     * @param txtN JTextField
-     * @param txtA JTextField
-     * @param txtId JTextField
-     * @param txtT JTextField
-     * @param txtP JTextField
-     * @param txtM JTextField
+     * @param Txt_Id_Prod JTextField
+     * @param Txt_Nombre JTextField
+     * @param Spn_Precio_Compra JSpinner
+     * @param Spn_Cantidad JSpinner
+     * @param Spn_Porcentaje_Venta JSpinner
      * @return boolean
      */
-    public boolean validarCamposErr(JTextField txtN, JTextField txtA, JTextField txtId, JTextField txtT, JTextField txtP, JTextField txtM) {
-        return (!txtN.getForeground().equals(Color.red)
-                && !txtA.getForeground().equals(Color.red)
-                && !txtId.getForeground().equals(Color.red)
-                && !txtT.getForeground().equals(Color.red)
-                && !txtP.getForeground().equals(Color.red)
-                && !txtM.getForeground().equals(Color.red));
+    //JTextField Txt_Id_Prod, JTextField Txt_Nombre, JSpinner Spn_Precio_Compra, JSpinner Spn_Cantidad, JSpinner Spn_Porcentaje_Venta
+    public boolean validarCamposErrProducto(JTextField Txt_Id_Prod, JTextField Txt_Nombre, JSpinner Spn_Precio_Compra, JSpinner Spn_Cantidad, JSpinner Spn_Porcentaje_Venta) {
+        return (!Txt_Id_Prod.getForeground().equals(Color.red)
+                && !Txt_Nombre.getForeground().equals(Color.red)
+                && !Spn_Precio_Compra.getForeground().equals(Color.red)
+                && !Spn_Cantidad.getForeground().equals(Color.red)
+                && !Spn_Porcentaje_Venta.getForeground().equals(Color.red));
     }
 
     /**
@@ -144,9 +141,7 @@ public class Excepciones {
         boolean estado = false;
         for (int i = 0; i < cmb.getItemCount(); i++) {
             estado = cmb.getItemAt(i).equals(cilindraje);
-            if (estado == true) {
-                break;
-            }
+            return estado;
         }
         return estado;
     }
@@ -173,13 +168,23 @@ public class Excepciones {
      * @param txt JTextField
      * @param Expresion String
      */
-    public void validarExpresion(JTextField txt, String Expresion) {
+    public void validarExpresionTxt(JTextField txt, String Expresion) {
         Pattern pat = Pattern.compile(Expresion);
         Matcher mat = pat.matcher(txt.getText());
         if (mat.matches()) {
             txt.setForeground(Color.black);
         } else {
             txt.setForeground(Color.red);
+        }
+    }
+    
+    public void validarExpresionSpinner(JSpinner spn, String Expresion) {
+        Pattern pat = Pattern.compile(Expresion);
+        Matcher mat = pat.matcher(spn.getValue().toString());
+        if (mat.matches()) {
+            spn.setForeground(Color.black);
+        } else {
+            spn.setForeground(Color.red);
         }
     }
 
@@ -220,7 +225,6 @@ public class Excepciones {
      * @return boolean
      * @throws java.io.IOException
      */
-    
     /*
     public boolean validarRegistroPlaca(CompilacionVehiculos auxVehiculo, String Placa, int NF, int Col) throws IOException {
         boolean resp = false;
@@ -232,7 +236,6 @@ public class Excepciones {
         }
         return resp;
     }*/
-
     /**
      *
      * Validación General: Verifica que la Identificación del propietario del
@@ -254,7 +257,6 @@ public class Excepciones {
         }
         return resp;
     }*/
-
     /**
      *
      * Validación General: Verifica que lo que se ha digitado sea realmente una
@@ -369,7 +371,7 @@ public class Excepciones {
         }
         return num;
     }
-    
+
     public boolean validarEmail(String email) {
         String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                 + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -425,7 +427,6 @@ public class Excepciones {
      * @param plantilla DefaultTableModel
      * @return int
      */
-    
     /*public int asignarFilas(CompilacionVehiculos auxVehiculo, DefaultTableModel plantilla) {
         String[] Reg = auxVehiculo.toStringArch();
         int NumC = 0;

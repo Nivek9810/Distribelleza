@@ -5,6 +5,22 @@
  */
 package Vista;
 
+import Controlador.DAO_Categoria;
+import Controlador.DAO_Marca;
+import Controlador.DAO_Producto;
+import Modelo.DTO_Categoria;
+import Modelo.DTO_Marca;
+import Modelo.DTO_Producto;
+import Modelo.Excepciones;
+import Modelo.TimestampCertificates;
+import java.security.Timestamp;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.SpinnerNumberModel;
+
 /**
  *
  * @author user
@@ -14,14 +30,35 @@ public class JifProducto extends javax.swing.JInternalFrame {
     /**
      * Creates new form JifProducto
      */
+    private DAO_Categoria objDataCategoria;
+    private DAO_Marca objDataMarca;
+    private Excepciones objExcepciones;
+
     public JifProducto() {
         initComponents();
+        this.objExcepciones = new Excepciones();
+        try {
+            this.objDataCategoria = new DAO_Categoria();
+            this.objDataMarca = new DAO_Marca();
+            setComponentsCofig();
+        } catch (SQLException ex) {
+            System.out.println("Error en la Base de datos: " + ex.getMessage());
+        }
     }
 
     public JifProducto(int Tipo, String Titulo) {
         initComponents();
-        System.out.println("Example: " + Tipo);
+        this.objExcepciones = new Excepciones();
+        //System.out.println("Example: " + Tipo);
         this.lblTitulo.setText(Titulo);
+
+        try {
+            this.objDataCategoria = new DAO_Categoria();
+            this.objDataMarca = new DAO_Marca();
+            setComponentsCofig();
+        } catch (SQLException ex) {
+            System.out.println("Error en la Base de datos: " + ex.getMessage());
+        }
     }
 
     /**
@@ -34,6 +71,22 @@ public class JifProducto extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         lblTitulo = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        Cbx_Marca = new javax.swing.JComboBox<>();
+        Cbx_Categoría = new javax.swing.JComboBox<>();
+        Txt_Id_Prod = new javax.swing.JTextField();
+        Txt_Nombre = new javax.swing.JTextField();
+        Spn_Precio_Compra = new javax.swing.JSpinner();
+        Spn_Porcentaje_Venta = new javax.swing.JSpinner();
+        Spn_Cantidad = new javax.swing.JSpinner();
+        btn_Registrar = new javax.swing.JButton();
 
         setIconifiable(true);
         setMaximizable(true);
@@ -42,28 +95,316 @@ public class JifProducto extends javax.swing.JInternalFrame {
         lblTitulo.setFont(new java.awt.Font("Segoe UI Historic", 0, 18)); // NOI18N
         lblTitulo.setText("Título");
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del producto"));
+        jPanel1.setToolTipText("");
+
+        jLabel6.setText("Porcentaje de venta: ");
+
+        jLabel1.setText("ID del Producto");
+
+        jLabel2.setText("Marca:");
+
+        jLabel3.setText("Categoría:");
+
+        jLabel4.setText("Nombre/Referencia:");
+
+        jLabel5.setText("Precio de compra:");
+
+        jLabel7.setText("Cantidades existentes:");
+
+        Txt_Id_Prod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Txt_Id_ProdActionPerformed(evt);
+            }
+        });
+        Txt_Id_Prod.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Txt_Id_ProdKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Txt_Id_ProdKeyReleased(evt);
+            }
+        });
+
+        Txt_Nombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Txt_NombreKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Txt_NombreKeyReleased(evt);
+            }
+        });
+
+        Spn_Precio_Compra.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Spn_Precio_CompraKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Spn_Precio_CompraKeyReleased(evt);
+            }
+        });
+
+        Spn_Porcentaje_Venta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Spn_Porcentaje_VentaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Spn_Porcentaje_VentaKeyReleased(evt);
+            }
+        });
+
+        Spn_Cantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Spn_CantidadKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Spn_CantidadKeyReleased(evt);
+            }
+        });
+
+        btn_Registrar.setText("Registrar Producto");
+        btn_Registrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_RegistrarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(18, 18, 18)
+                                .addComponent(Spn_Cantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addGap(54, 54, 54)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Cbx_Marca, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(Txt_Id_Prod)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6))
+                                .addGap(23, 23, 23)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Cbx_Categoría, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(Txt_Nombre)
+                                    .addComponent(Spn_Precio_Compra)
+                                    .addComponent(Spn_Porcentaje_Venta)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addComponent(btn_Registrar)))
+                .addContainerGap(241, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(Txt_Id_Prod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(Cbx_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(Cbx_Categoría, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(Txt_Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(Spn_Precio_Compra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(Spn_Porcentaje_Venta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(Spn_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btn_Registrar)
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo)
-                .addContainerGap(465, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTitulo))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitulo)
-                .addContainerGap(318, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Txt_Id_ProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Txt_Id_ProdActionPerformed
+
+    }//GEN-LAST:event_Txt_Id_ProdActionPerformed
+
+    private void btn_RegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RegistrarActionPerformed
+        try {
+            DAO_Producto objDataProducto = new DAO_Producto();
+            TimestampCertificates tc = new TimestampCertificates();
+            if (this.objExcepciones.validarCamposProducto(Txt_Id_Prod, Txt_Nombre, Spn_Precio_Compra, Spn_Cantidad, Spn_Porcentaje_Venta)
+                    && this.objExcepciones.validarCamposErrProducto(Txt_Id_Prod, Txt_Nombre, Spn_Precio_Compra, Spn_Cantidad, Spn_Porcentaje_Venta)) {
+                if (objDataProducto.registrarNuevoProducto(new DTO_Producto(this.Txt_Id_Prod.getText(),
+                        this.getMarcaById(),
+                        this.getCategoryById(),
+                        this.Txt_Nombre.getText().toUpperCase(),
+                        Double.parseDouble(this.Spn_Precio_Compra.getValue().toString()),
+                        (int) this.Spn_Cantidad.getValue(),
+                        Double.parseDouble(this.Spn_Porcentaje_Venta.getValue().toString()) / 100,
+                        new Timestamp(new Date(), tc.getCertPath())
+                ))) {
+                    JOptionPane.showMessageDialog(this, "¡El producto " + this.Txt_Nombre.getText().toUpperCase() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
+                    this.cleanAllInputs();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Algo salió mal", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No puede dejar campos vacios o erroneos", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            if (ex.getErrorCode() == 0) {
+                int res = JOptionPane.showConfirmDialog(this, "El producto ya se encuentra registrado\n"
+                        + "¿Desea editarlo?", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+                if (res == JOptionPane.YES_OPTION) {
+                    JOptionPane.showMessageDialog(this, "Tomamos el id " + this.Txt_Id_Prod.getText() + " y lo enviamos al JIf de actualizar.", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Registro de producto", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btn_RegistrarActionPerformed
+
+    private void Txt_NombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_NombreKeyPressed
+        this.objExcepciones.validarLetra(evt);
+    }//GEN-LAST:event_Txt_NombreKeyPressed
+
+    private void Txt_Id_ProdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_Id_ProdKeyPressed
+        this.objExcepciones.validarNum(evt);
+    }//GEN-LAST:event_Txt_Id_ProdKeyPressed
+
+    private void Spn_Precio_CompraKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Spn_Precio_CompraKeyPressed
+        this.objExcepciones.validarNum(evt);
+    }//GEN-LAST:event_Spn_Precio_CompraKeyPressed
+
+    private void Spn_Porcentaje_VentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Spn_Porcentaje_VentaKeyPressed
+        this.objExcepciones.validarNum(evt);
+    }//GEN-LAST:event_Spn_Porcentaje_VentaKeyPressed
+
+    private void Spn_CantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Spn_CantidadKeyPressed
+        this.objExcepciones.validarNum(evt);
+    }//GEN-LAST:event_Spn_CantidadKeyPressed
+
+    private void Spn_Precio_CompraKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Spn_Precio_CompraKeyReleased
+        this.objExcepciones.validarExpresionSpinner(Spn_Precio_Compra, "^(\\d{1,7})$");
+    }//GEN-LAST:event_Spn_Precio_CompraKeyReleased
+
+    private void Spn_Porcentaje_VentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Spn_Porcentaje_VentaKeyReleased
+        this.objExcepciones.validarExpresionSpinner(Spn_Porcentaje_Venta, "^(\\d{1,3})$");
+    }//GEN-LAST:event_Spn_Porcentaje_VentaKeyReleased
+
+    private void Spn_CantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Spn_CantidadKeyReleased
+        this.objExcepciones.validarExpresionSpinner(Spn_Cantidad, "^(\\d{1,3})$");
+    }//GEN-LAST:event_Spn_CantidadKeyReleased
+
+    private void Txt_Id_ProdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_Id_ProdKeyReleased
+        this.objExcepciones.validarExpresionTxt(Txt_Id_Prod, "^(\\d{2,15})$");
+    }//GEN-LAST:event_Txt_Id_ProdKeyReleased
+
+    private void Txt_NombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_NombreKeyReleased
+        this.objExcepciones.validarExpresionTxt(Txt_Nombre, "[a-zA-ZñÑ\\s]{2,40}");
+    }//GEN-LAST:event_Txt_NombreKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> Cbx_Categoría;
+    private javax.swing.JComboBox<String> Cbx_Marca;
+    private javax.swing.JSpinner Spn_Cantidad;
+    private javax.swing.JSpinner Spn_Porcentaje_Venta;
+    private javax.swing.JSpinner Spn_Precio_Compra;
+    private javax.swing.JTextField Txt_Id_Prod;
+    private javax.swing.JTextField Txt_Nombre;
+    private javax.swing.JButton btn_Registrar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
+
+    private void setComponentsCofig() {
+        this.Spn_Precio_Compra.setModel(new SpinnerNumberModel(0, 0, 1000000, 1));
+        this.Spn_Porcentaje_Venta.setModel(new SpinnerNumberModel(0, 0, 100, 1));
+        this.Spn_Cantidad.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
+
+        try {
+
+            this.objDataCategoria.getAllCategories().
+                    forEach(category
+                            -> this.Cbx_Categoría.addItem(category.getId_Categoria() + "- " + category.getNombre()));
+
+            objDataMarca.getAllMarcas().
+                    forEach(marca
+                            -> this.Cbx_Marca.addItem(marca.getId_Marca() + "- " + marca.getNombre() + " de " + marca.getProveedor().getNombre()));
+
+        } catch (SQLException ex) {
+            System.out.println("Error en la Base de datos: " + ex.getMessage());
+        }
+    }
+
+    private DTO_Categoria getCategoryById() throws SQLException {
+        String item = this.Cbx_Categoría.getSelectedItem().toString();
+        int id_category = Integer.parseInt(item.split("-")[0]);
+        return this.objDataCategoria.getSingleCategory(id_category);
+    }
+
+    private DTO_Marca getMarcaById() throws SQLException {
+        String item = this.Cbx_Marca.getSelectedItem().toString();
+        int id_marca = Integer.parseInt(item.split("-")[0]);
+        return this.objDataMarca.getSingleMarca(id_marca);
+    }
+
+    private void cleanAllInputs() {
+        this.Txt_Id_Prod.setText("");
+        this.Txt_Nombre.setText("");
+        this.Spn_Precio_Compra.setModel(new SpinnerNumberModel(0, 0, 1000000, 1));
+        this.Spn_Porcentaje_Venta.setModel(new SpinnerNumberModel(0, 0, 100, 1));
+        this.Spn_Cantidad.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
+    }
 }

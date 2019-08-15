@@ -44,37 +44,37 @@ public class DTO_Producto {
         this.Fecha_de_Carga = Fecha_de_Carga;
     }
 
-    public void setId_Producto(String Id_Producto) {
-        this.Id_Producto = Id_Producto;
+    public String getId_Producto() {
+        return Id_Producto;
     }
 
-    public void setMarca(DTO_Marca Marca) {
-        this.Marca = Marca;
+    public DTO_Marca getMarca() {
+        return Marca;
     }
 
-    public void setCategoria(DTO_Categoria Categoria) {
-        this.Categoria = Categoria;
+    public DTO_Categoria getCategoria() {
+        return Categoria;
     }
 
-    public void setNombre(String Nombre) {
-        this.Nombre = Nombre;
+    public String getNombre() {
+        return Nombre;
     }
 
-    public void setPrecio_Compra(double Precio_Compra) {
-        this.Precio_Compra = Precio_Compra;
+    public double getPrecio_Compra() {
+        return Precio_Compra;
     }
 
-    public void setCantidad(int Cantidad) {
-        this.Cantidad = Cantidad;
+    public int getCantidad() {
+        return Cantidad;
     }
 
-    public void setPorcentaje_Venta(double Porcentaje_Venta) {
-        this.Porcentaje_Venta = Porcentaje_Venta;
+    public double getPorcentaje_Venta() {
+        return Porcentaje_Venta;
     }
 
-    public void setFecha_de_Carga(Timestamp Fecha_de_Carga) {
-        this.Fecha_de_Carga = Fecha_de_Carga;
+    public Timestamp getFecha_de_Carga() {
+        return Fecha_de_Carga;
     }
-    
+
     
 }
