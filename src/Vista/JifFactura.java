@@ -6,6 +6,7 @@
 package Vista;
 
 import Controlador.DAO_Producto;
+import Modelo.DTO_Producto;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,13 +21,17 @@ public class JifFactura extends javax.swing.JInternalFrame {
     /**
      * Creates new form JifFactura
      */
+    private DTO_Producto objProducto;
+
     public JifFactura() {
         initComponents();
+        this.objProducto = new DTO_Producto();
     }
-    
+
     public JifFactura(String titulo) {
         initComponents();
         this.lblTitulo.setText(titulo);
+        this.objProducto = new DTO_Producto();
     }
 
     /**
@@ -126,10 +131,15 @@ public class JifFactura extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void TxtProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtProductoActionPerformed
-        JOptionPane.showMessageDialog(this, "Hola "+this.TxtProducto.getText());
         try {
-            DAO_Producto objDataProducto=new DAO_Producto();
-            System.out.println("Datos nombre: "+objDataProducto.getSingleProducto(this.TxtProducto.getText()).getNombre());
+            DAO_Producto objDataProducto = new DAO_Producto();
+            this.AreaProductos.setEnabled(false);
+            this.objProducto = objDataProducto.getSingleProducto(this.TxtProducto.getText());
+            AreaProductos.append(this.objProducto.getNombre() + " | "
+                    + (int)(this.objProducto.getPrecio_Compra() - (this.objProducto.getPorcentaje_Venta() * this.objProducto.getPrecio_Compra())));
+            AreaProductos.append(System.getProperty("line.separator")); // Esto para el salto de línea 
+            //JOptionPane.showMessageDialog(this, " " + this.TxtProducto.getText());
+
         } catch (SQLException ex) {
             Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
         }
