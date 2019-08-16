@@ -94,7 +94,7 @@ VALUES ('7703252001131',1,1,'SHAMPOO TEST', 5000, 45,0.05, '06/08/2019 14:34:04'
                     this.objDataMarca.getSingleMarca(this.resultSet.getInt("id_marca")),
                     this.objDataCategoria.getSingleCategory(this.resultSet.getInt("id_categoria")),
                     this.resultSet.getString("nombre"),
-                    0,
+                    (double)this.resultSet.getInt("precio_compra"),
                     this.resultSet.getInt("cantidad"),
                     this.resultSet.getDouble("porcentaje_venta"),
                     new Timestamp(new Date(this.resultSet.getTimestamp("fecha_de_carga").getTime()), this.tc.getCertPath()));
