@@ -37,15 +37,18 @@ public class DAO_Producto {
     private Connection conection;
     private TimestampCertificates tc;
 
-    public DAO_Producto(ArrayList<DTO_Producto> lista_Productos, DTO_Producto objProducto, DTO_Categoria objCategoria, DTO_Marca objMarca, Statement statement, Conexion con, ResultSet resultSet, Connection conection) {
+    public DAO_Producto(ArrayList<DTO_Producto> lista_Productos, DTO_Producto objProducto, DTO_Categoria objCategoria, DAO_Categoria objDataCategoria, DTO_Marca objMarca, DAO_Marca objDataMarca, Statement statement, Conexion con, ResultSet resultSet, Connection conection, TimestampCertificates tc) {
         this.lista_Productos = lista_Productos;
         this.objProducto = objProducto;
         this.objCategoria = objCategoria;
+        this.objDataCategoria = objDataCategoria;
         this.objMarca = objMarca;
+        this.objDataMarca = objDataMarca;
         this.statement = statement;
         this.con = con;
         this.resultSet = resultSet;
         this.conection = conection;
+        this.tc = tc;
     }
 
     public DAO_Producto() throws SQLException {
@@ -64,12 +67,7 @@ public class DAO_Producto {
     }
 
     public boolean registrarNuevoProducto(DTO_Producto objProducto) throws SQLException {
-        boolean r = false;
-        /*
-        INSERT INTO PRODUCTO 
-VALUES ('7703252001131',1,1,'SHAMPOO TEST', 5000, 45,0.05, '06/08/2019 14:34:04')
-         */
-        String insertRH = "INSERT INTO "
+        String insertNewProduct = "INSERT INTO "
                 + "PRODUCTO "
                 + "VALUES ('" + objProducto.getId_Producto() + "',"
                 + objProducto.getMarca().getId_Marca() + ","
@@ -79,9 +77,53 @@ VALUES ('7703252001131',1,1,'SHAMPOO TEST', 5000, 45,0.05, '06/08/2019 14:34:04'
                 + objProducto.getCantidad() + ","
                 + objProducto.getPorcentaje_Venta() + ",'"
                 + objProducto.getFecha_de_Carga().getTimestamp() + "');";
-        int res = statement.executeUpdate(insertRH);
-
+        int res = statement.executeUpdate(insertNewProduct);
         return (res > 0);
+    }
+
+    public boolean modificarProducto(DTO_Producto objProducto) throws SQLException {
+        String updateProduct = "UPDATE PRODUCTO SET "
+                + "Id_Marca = " + objProducto.getMarca().getId_Marca() + ", "
+                + "Id_Categoria = " + objProducto.getCategoria().getId_Categoria() + ", "
+                + "Nombre = '" + objProducto.getNombre() + "', "
+                + "Precio_Compra = " + objProducto.getPrecio_Compra() + ", "
+                + "Cantidad = " + objProducto.getCantidad() + ", "
+                + "Porcentaje_Venta = " + objProducto.getPorcentaje_Venta() + ", "
+                + "Fecha_de_Carga = '" + objProducto.getFecha_de_Carga().getTimestamp() + "' "
+                + "WHERE Id_Producto = '" + objProducto.getId_Producto() + "';";
+        int cantResults = statement.executeUpdate(updateProduct);
+        return (cantResults > 0);
+    }
+
+    public boolean eliminarProducto(String id_producto) throws SQLException {
+        String updateProduct = "UPDATE PRODUCTO SET "
+                + "Estado = " + false + " "
+                + "WHERE Id_Producto = '" + objProducto.getId_Producto() + "';";
+        int cantResults = statement.executeUpdate(updateProduct);
+        return (cantResults > 0);
+    }
+
+    public ArrayList<DTO_Producto> getAllProducts() throws SQLException {
+        this.lista_Productos.clear();
+        String query = "SELECT * FROM PRODUCTO;";
+        this.resultSet = this.statement.executeQuery(query);
+        while (this.resultSet.next()) {
+            /*
+            String Id_Producto, DTO_Marca Marca, DTO_Categoria Categoria, String Nombre, 
+            double Precio_Compra, int Cantidad, double Porcentaje_Venta, Timestamp Fecha_de_Carga
+             */
+            this.lista_Productos.add(new DTO_Producto(
+                    this.resultSet.getString("Id_Producto"),
+                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("Id_Marca")),
+                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("Id_Categoria")),
+                    this.resultSet.getString("Nombre"),
+                    (double) this.resultSet.getInt("Precio_Compra"),
+                    this.resultSet.getInt("Cantidad"),
+                    this.resultSet.getDouble("Porcentaje_Venta"),
+                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha_de_Carga").getTime()), this.tc.getCertPath()))
+            );
+        }
+        return this.lista_Productos;
     }
 
     public DTO_Producto getSingleProducto(String id) throws SQLException {
@@ -94,7 +136,7 @@ VALUES ('7703252001131',1,1,'SHAMPOO TEST', 5000, 45,0.05, '06/08/2019 14:34:04'
                     this.objDataMarca.getSingleMarca(this.resultSet.getInt("id_marca")),
                     this.objDataCategoria.getSingleCategory(this.resultSet.getInt("id_categoria")),
                     this.resultSet.getString("nombre"),
-                    (double)this.resultSet.getInt("precio_compra"),
+                    (double) this.resultSet.getInt("precio_compra"),
                     this.resultSet.getInt("cantidad"),
                     this.resultSet.getDouble("porcentaje_venta"),
                     new Timestamp(new Date(this.resultSet.getTimestamp("fecha_de_carga").getTime()), this.tc.getCertPath()));
@@ -102,4 +144,25 @@ VALUES ('7703252001131',1,1,'SHAMPOO TEST', 5000, 45,0.05, '06/08/2019 14:34:04'
         }
         return this.objProducto;
     }
+
+    public ArrayList<DTO_Producto> getProductosByQuery(String nombre) throws SQLException {
+        this.lista_Productos.clear();
+        String query = "SELECT * FROM PRODUCTO "
+                + "WHERE Nombre LIKE '%" + nombre + "%';";
+        this.resultSet = this.statement.executeQuery(query);
+        while (this.resultSet.next()) {
+            this.lista_Productos.add(new DTO_Producto(
+                    this.resultSet.getString("Id_Producto"),
+                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("Id_Marca")),
+                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("Id_Categoria")),
+                    this.resultSet.getString("Nombre"),
+                    (double) this.resultSet.getInt("Precio_Compra"),
+                    this.resultSet.getInt("Cantidad"),
+                    this.resultSet.getDouble("Porcentaje_Venta"),
+                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha_de_Carga").getTime()), this.tc.getCertPath()))
+            );
+        }
+        return this.lista_Productos;
+    }
+
 }

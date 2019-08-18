@@ -100,9 +100,9 @@ public class Excepciones {
     public boolean validarCamposProducto(JTextField Txt_Id_Prod, JTextField Txt_Nombre, JSpinner Spn_Precio_Compra, JSpinner Spn_Cantidad, JSpinner Spn_Porcentaje_Venta) {
         return (!Txt_Id_Prod.getText().trim().equals("")
                 && !Txt_Nombre.getText().trim().equals("")
-                && Integer.parseInt(Spn_Precio_Compra.getValue().toString()) > 0
-                && Integer.parseInt(Spn_Cantidad.getValue().toString()) > 0
-                && Integer.parseInt(Spn_Porcentaje_Venta.getValue().toString()) > 0);
+                && Double.parseDouble(Spn_Precio_Compra.getValue().toString()) > 0
+                && Double.parseDouble(Spn_Cantidad.getValue().toString()) > 0
+                && Double.parseDouble(Spn_Porcentaje_Venta.getValue().toString()) > 0);
     }
 
     /**
@@ -177,7 +177,7 @@ public class Excepciones {
             txt.setForeground(Color.red);
         }
     }
-    
+
     public void validarExpresionSpinner(JSpinner spn, String Expresion) {
         Pattern pat = Pattern.compile(Expresion);
         Matcher mat = pat.matcher(spn.getValue().toString());

@@ -20,6 +20,7 @@ public class JfMain extends javax.swing.JFrame {
      */
     private JifProducto objJifProducto;
     private JifFactura objJifFactura;
+    private JifListar_Productos obJifListar_Productos;
     private final Excepciones objExcepciones;
 
     public JfMain() {
@@ -83,8 +84,13 @@ public class JfMain extends javax.swing.JFrame {
         });
         jMAccionProd.add(jMINuevoProducto);
 
-        jMIEliminarProd.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        jMIEliminarProd.setText("Eliminar Producto");
+        jMIEliminarProd.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMIEliminarProd.setText("Listar productos");
+        jMIEliminarProd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIEliminarProdActionPerformed(evt);
+            }
+        });
         jMAccionProd.add(jMIEliminarProd);
 
         jMenu1.add(jMAccionProd);
@@ -151,7 +157,7 @@ public class JfMain extends javax.swing.JFrame {
 
     private void jMINuevoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMINuevoProductoActionPerformed
         try {
-            confGen("Impuesto de Automóviles", 1);
+            confGen("Módulo de producto");
             //visibilidad(false, false);
         } catch (IOException ex) {
             System.out.println("Se ha generado la excepción: " + ex.getMessage());
@@ -165,8 +171,15 @@ public class JfMain extends javax.swing.JFrame {
         this.objJifFactura.setClosable(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    public void confGen(String Titulo, int Tipo) throws IOException {
-        objJifProducto = new JifProducto(Tipo, Titulo);
+    private void jMIEliminarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIEliminarProdActionPerformed
+        this.obJifListar_Productos = new JifListar_Productos();
+        this.objExcepciones.controlaInstancia(this.obJifListar_Productos, this.jdpEscritorio);
+        this.obJifListar_Productos.setVisible(true);
+        this.obJifListar_Productos.setClosable(true);
+    }//GEN-LAST:event_jMIEliminarProdActionPerformed
+
+    public void confGen(String Titulo) throws IOException {
+        objJifProducto = new JifProducto(Titulo);
         objExcepciones.controlaInstancia(objJifProducto, this.jdpEscritorio);
         objJifProducto.setVisible(true);
         objJifProducto.setClosable(true);

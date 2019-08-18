@@ -32,30 +32,41 @@ public class JifProducto extends javax.swing.JInternalFrame {
      */
     private DAO_Categoria objDataCategoria;
     private DAO_Marca objDataMarca;
+    private DAO_Producto objDataProducto;
     private Excepciones objExcepciones;
 
     public JifProducto() {
         initComponents();
         this.objExcepciones = new Excepciones();
         try {
-            this.objDataCategoria = new DAO_Categoria();
-            this.objDataMarca = new DAO_Marca();
             setComponentsCofig();
         } catch (SQLException ex) {
             System.out.println("Error en la Base de datos: " + ex.getMessage());
         }
     }
 
-    public JifProducto(int Tipo, String Titulo) {
+    public JifProducto(String Titulo) {
         initComponents();
         this.objExcepciones = new Excepciones();
         //System.out.println("Example: " + Tipo);
         this.lblTitulo.setText(Titulo);
 
         try {
-            this.objDataCategoria = new DAO_Categoria();
-            this.objDataMarca = new DAO_Marca();
-            setComponentsCofig();
+            this.setComponentsCofig();
+        } catch (SQLException ex) {
+            System.out.println("Error en la Base de datos: " + ex.getMessage());
+        }
+    }
+
+    public JifProducto(DTO_Producto objProducto, String Titulo) {
+        initComponents();
+        this.objExcepciones = new Excepciones();
+        //System.out.println("Example: " + Tipo);
+        this.lblTitulo.setText(Titulo);
+
+        try {
+            this.setComponentsCofig();
+            this.fillData(objProducto);
         } catch (SQLException ex) {
             System.out.println("Error en la Base de datos: " + ex.getMessage());
         }
@@ -71,6 +82,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         lblTitulo = new javax.swing.JLabel();
+        JtpProducto = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -86,7 +98,23 @@ public class JifProducto extends javax.swing.JInternalFrame {
         Spn_Precio_Compra = new javax.swing.JSpinner();
         Spn_Porcentaje_Venta = new javax.swing.JSpinner();
         Spn_Cantidad = new javax.swing.JSpinner();
-        btn_Registrar = new javax.swing.JButton();
+        btn_RegistrarProd = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        Lbl_CatTitulo = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        Txt_Categoria = new javax.swing.JTextField();
+        Btn_Categoria = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        Lbl_TituloMarca = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        Txt_Marca = new javax.swing.JTextField();
+        Cbx_Proveedor = new javax.swing.JComboBox<>();
+        Cbx_Categoria = new javax.swing.JComboBox<>();
+        Btn_Marca = new javax.swing.JButton();
 
         setIconifiable(true);
         setMaximizable(true);
@@ -162,12 +190,38 @@ public class JifProducto extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_Registrar.setText("Registrar Producto");
-        btn_Registrar.addActionListener(new java.awt.event.ActionListener() {
+        btn_RegistrarProd.setText("Registrar Producto");
+        btn_RegistrarProd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_RegistrarActionPerformed(evt);
+                btn_RegistrarProdActionPerformed(evt);
             }
         });
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Opciones"));
+
+        jButton1.setText("Ver lista de productos");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -201,28 +255,35 @@ public class JifProducto extends javax.swing.JInternalFrame {
                                     .addComponent(Cbx_Categoría, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(Txt_Nombre)
                                     .addComponent(Spn_Precio_Compra)
-                                    .addComponent(Spn_Porcentaje_Venta)))))
+                                    .addComponent(Spn_Porcentaje_Venta))))
+                        .addGap(69, 69, 69)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(92, 92, 92)
-                        .addComponent(btn_Registrar)))
-                .addContainerGap(241, Short.MAX_VALUE))
+                        .addComponent(btn_RegistrarProd)))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(Txt_Id_Prod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(Cbx_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(Cbx_Categoría, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(Txt_Id_Prod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(Cbx_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(Cbx_Categoría, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(Txt_Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -239,9 +300,119 @@ public class JifProducto extends javax.swing.JInternalFrame {
                     .addComponent(jLabel7)
                     .addComponent(Spn_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btn_Registrar)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addComponent(btn_RegistrarProd)
+                .addContainerGap(49, Short.MAX_VALUE))
         );
+
+        JtpProducto.addTab("Producto", jPanel1);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de Categoria"));
+
+        Lbl_CatTitulo.setText("Nueva categoria");
+
+        jLabel8.setText("Nombre:");
+
+        Btn_Categoria.setText("Agregar");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Lbl_CatTitulo)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(Btn_Categoria)
+                        .addComponent(Txt_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(563, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Lbl_CatTitulo)
+                .addGap(11, 11, 11)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(Txt_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Btn_Categoria)
+                .addContainerGap(215, Short.MAX_VALUE))
+        );
+
+        JtpProducto.addTab("Categorias", jPanel2);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de la marca"));
+
+        Lbl_TituloMarca.setText("Nueva marca");
+
+        jLabel10.setText("Nombre:");
+
+        jLabel11.setText("Proveedor");
+
+        jLabel12.setText("Categoria");
+
+        Txt_Marca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Txt_MarcaActionPerformed(evt);
+            }
+        });
+
+        Cbx_Proveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        Cbx_Categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        Btn_Marca.setText("Agregar");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel10))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Btn_Marca)
+                            .addComponent(Txt_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Cbx_Proveedor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Lbl_TituloMarca)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(Cbx_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(557, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Lbl_TituloMarca)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(Txt_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(Cbx_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(Cbx_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(Btn_Marca)
+                .addContainerGap(156, Short.MAX_VALUE))
+        );
+
+        JtpProducto.addTab("Marca", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -249,10 +420,9 @@ public class JifProducto extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTitulo))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addComponent(lblTitulo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(JtpProducto, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,9 +430,10 @@ public class JifProducto extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(lblTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(JtpProducto))
         );
+
+        JtpProducto.getAccessibleContext().setAccessibleName("Producto");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -271,26 +442,49 @@ public class JifProducto extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_Txt_Id_ProdActionPerformed
 
-    private void btn_RegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RegistrarActionPerformed
+    private void btn_RegistrarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RegistrarProdActionPerformed
         try {
             DAO_Producto objDataProducto = new DAO_Producto();
             TimestampCertificates tc = new TimestampCertificates();
             if (this.objExcepciones.validarCamposProducto(Txt_Id_Prod, Txt_Nombre, Spn_Precio_Compra, Spn_Cantidad, Spn_Porcentaje_Venta)
                     && this.objExcepciones.validarCamposErrProducto(Txt_Id_Prod, Txt_Nombre, Spn_Precio_Compra, Spn_Cantidad, Spn_Porcentaje_Venta)) {
-                if (objDataProducto.registrarNuevoProducto(new DTO_Producto(this.Txt_Id_Prod.getText(),
-                        this.getMarcaById(),
-                        this.getCategoryById(),
-                        this.Txt_Nombre.getText().toUpperCase(),
-                        Double.parseDouble(this.Spn_Precio_Compra.getValue().toString()),
-                        (int) this.Spn_Cantidad.getValue(),
-                        Double.parseDouble(this.Spn_Porcentaje_Venta.getValue().toString()) / 100,
-                        new Timestamp(new Date(), tc.getCertPath())
-                ))) {
-                    JOptionPane.showMessageDialog(this, "¡El producto " + this.Txt_Nombre.getText().toUpperCase() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
-                    this.cleanAllInputs();
+
+                if (this.Txt_Id_Prod.isEnabled()) {
+                    //@START: Nuevo Producto
+                    if (objDataProducto.registrarNuevoProducto(new DTO_Producto(this.Txt_Id_Prod.getText(),
+                            this.getMarcaById(),
+                            this.getCategoryById(),
+                            this.Txt_Nombre.getText().toUpperCase(),
+                            Double.parseDouble(this.Spn_Precio_Compra.getValue().toString()),
+                            (int) this.Spn_Cantidad.getValue(),
+                            Double.parseDouble(this.Spn_Porcentaje_Venta.getValue().toString()) / 100,
+                            new Timestamp(new Date(), tc.getCertPath())
+                    ))) {
+                        JOptionPane.showMessageDialog(this, "¡El producto " + this.Txt_Nombre.getText().toUpperCase() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
+                        this.cleanAllInputs();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Algo salió mal", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+                    }
+                    //@END: Nuevo Producto
                 } else {
-                    JOptionPane.showMessageDialog(this, "Algo salió mal", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+                    //@START: Editar Producto
+                    if (objDataProducto.modificarProducto(new DTO_Producto(this.Txt_Id_Prod.getText(),
+                            this.getMarcaById(),
+                            this.getCategoryById(),
+                            this.Txt_Nombre.getText().toUpperCase(),
+                            Double.parseDouble(this.Spn_Precio_Compra.getValue().toString()),
+                            (int) this.Spn_Cantidad.getValue(),
+                            Double.parseDouble(this.Spn_Porcentaje_Venta.getValue().toString()) / 100,
+                            new Timestamp(new Date(), tc.getCertPath())
+                    ))) {
+                        JOptionPane.showMessageDialog(this, "¡El producto " + this.Txt_Nombre.getText().toUpperCase() + " se ha modificado con éxito!", "Modificación de producto", JOptionPane.INFORMATION_MESSAGE);
+                        this.cleanAllInputs();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Algo salió mal", "Modificación de producto", JOptionPane.ERROR_MESSAGE);
+                    }
+                    //@END: Editar Producto
                 }
+
             } else {
                 JOptionPane.showMessageDialog(this, "No puede dejar campos vacios o erroneos", "Registro de producto", JOptionPane.ERROR_MESSAGE);
             }
@@ -299,13 +493,17 @@ public class JifProducto extends javax.swing.JInternalFrame {
                 int res = JOptionPane.showConfirmDialog(this, "El producto ya se encuentra registrado\n"
                         + "¿Desea editarlo?", "Registro de producto", JOptionPane.ERROR_MESSAGE);
                 if (res == JOptionPane.YES_OPTION) {
-                    JOptionPane.showMessageDialog(this, "Tomamos el id " + this.Txt_Id_Prod.getText() + " y lo enviamos al JIf de actualizar.", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+                    try {
+                        this.fillData(this.objDataProducto.getSingleProducto(this.Txt_Id_Prod.getText()));
+                    } catch (SQLException exSP) {
+                        Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, exSP);
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Registro de producto", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_btn_RegistrarActionPerformed
+    }//GEN-LAST:event_btn_RegistrarProdActionPerformed
 
     private void Txt_NombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_NombreKeyPressed
         this.objExcepciones.validarLetra(evt);
@@ -347,28 +545,59 @@ public class JifProducto extends javax.swing.JInternalFrame {
         this.objExcepciones.validarExpresionTxt(Txt_Nombre, "[a-zA-ZñÑ\\s]{2,40}");
     }//GEN-LAST:event_Txt_NombreKeyReleased
 
+    private void Txt_MarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Txt_MarcaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Txt_MarcaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JifListar_Productos jifListar_Productos = new JifListar_Productos();
+        this.objExcepciones.controlaInstancia(jifListar_Productos, this.getDesktopPane());
+        jifListar_Productos.setVisible(true);
+        jifListar_Productos.setClosable(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Btn_Categoria;
+    private javax.swing.JButton Btn_Marca;
+    private javax.swing.JComboBox<String> Cbx_Categoria;
     private javax.swing.JComboBox<String> Cbx_Categoría;
     private javax.swing.JComboBox<String> Cbx_Marca;
+    private javax.swing.JComboBox<String> Cbx_Proveedor;
+    private javax.swing.JTabbedPane JtpProducto;
+    private javax.swing.JLabel Lbl_CatTitulo;
+    private javax.swing.JLabel Lbl_TituloMarca;
     private javax.swing.JSpinner Spn_Cantidad;
     private javax.swing.JSpinner Spn_Porcentaje_Venta;
     private javax.swing.JSpinner Spn_Precio_Compra;
+    private javax.swing.JTextField Txt_Categoria;
     private javax.swing.JTextField Txt_Id_Prod;
+    private javax.swing.JTextField Txt_Marca;
     private javax.swing.JTextField Txt_Nombre;
-    private javax.swing.JButton btn_Registrar;
+    private javax.swing.JButton btn_RegistrarProd;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 
-    private void setComponentsCofig() {
+    private void setComponentsCofig() throws SQLException {
+        this.objDataCategoria = new DAO_Categoria();
+        this.objDataMarca = new DAO_Marca();
+        this.objDataProducto = new DAO_Producto();
         this.Spn_Precio_Compra.setModel(new SpinnerNumberModel(0, 0, 1000000, 1));
         this.Spn_Porcentaje_Venta.setModel(new SpinnerNumberModel(0, 0, 100, 1));
         this.Spn_Cantidad.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
@@ -402,9 +631,25 @@ public class JifProducto extends javax.swing.JInternalFrame {
 
     private void cleanAllInputs() {
         this.Txt_Id_Prod.setText("");
+        this.Txt_Id_Prod.setEnabled(true);
         this.Txt_Nombre.setText("");
         this.Spn_Precio_Compra.setModel(new SpinnerNumberModel(0, 0, 1000000, 1));
         this.Spn_Porcentaje_Venta.setModel(new SpinnerNumberModel(0, 0, 100, 1));
         this.Spn_Cantidad.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
+    }
+
+    private void fillData(DTO_Producto objProducto) {
+        this.Txt_Id_Prod.setText(objProducto.getId_Producto());
+        this.Cbx_Marca.setSelectedItem(objProducto.getMarca().getId_Marca() + "- "
+                + objProducto.getMarca().getNombre() + " de "
+                + objProducto.getMarca().getProveedor().getNombre());
+        this.Cbx_Proveedor.setSelectedItem(objProducto.getCategoria().getId_Categoria() + "- "
+                + objProducto.getCategoria().getNombre());
+        this.Txt_Nombre.setText(objProducto.getNombre());
+        this.Spn_Precio_Compra.setValue(objProducto.getPrecio_Compra());
+        this.Spn_Porcentaje_Venta.setValue(objProducto.getPorcentaje_Venta() * 100);
+        this.Spn_Cantidad.setValue(objProducto.getCantidad());
+        this.btn_RegistrarProd.setText("Modificar producto");
+        this.Txt_Id_Prod.setEnabled(false);
     }
 }

@@ -28,10 +28,13 @@
                 <MenuItem class="javax.swing.JMenuItem" name="jMIEliminarProd">
                   <Properties>
                     <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                      <KeyStroke key="Shift+Ctrl+E"/>
+                      <KeyStroke key="Shift+Ctrl+L"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Eliminar Producto"/>
+                    <Property name="text" type="java.lang.String" value="Listar productos"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIEliminarProdActionPerformed"/>
+                  </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>
