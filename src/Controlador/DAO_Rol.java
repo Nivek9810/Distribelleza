@@ -60,7 +60,7 @@ public class DAO_Rol {
     public DTO_Rol getSingleRol(int id_Rol) throws SQLException {
         this.objRol = null;
 
-        String consulta = "SELECT * FROM CATEGORIA WHERE Id_Rol=" + id_Rol+ ";";
+        String consulta = "SELECT * FROM ROL WHERE Id_Rol=" + id_Rol+ ";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.objRol = new DTO_Rol(

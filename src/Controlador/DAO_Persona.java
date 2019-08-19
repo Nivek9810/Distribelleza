@@ -70,11 +70,10 @@ public class DAO_Persona {
     
    public boolean registrarNuevaPersona (DTO_Persona objPersona) throws SQLException {
        
-          String insertNewPersona= "INSERT INTO"
-                  +"PERSONA"
+          String insertNewPersona= "INSERT INTO "
+                  +"PERSONA "
                   +"VALUES ('"+objPersona.getDNI()+"','"
-                  +objPersona.getNombre()+"',"
-                  +objPersona.getRol().getId_Rol()+",'"
+                  +objPersona.getNombre()+"','"
                   +objPersona.getTelefono()+"','"
                   +objPersona.getFecha().getTimestamp()+"','"
                   +objPersona.getDireccion()+"','"
@@ -86,7 +85,6 @@ public class DAO_Persona {
    public boolean modificarPersona(DTO_Persona objPersona) throws SQLException {
         String updatePersona = "UPDATE PERSONA SET "
                 + "Nombre = '" + objPersona.getNombre() + "', "
-                + "Id_Rol = " + objPersona.getRol().getId_Rol() + ", "
                 + "Telefono = '" + objPersona.getTelefono() + "', "
                 + "Fecha = '" + objPersona.getFecha().getTimestamp()+ "' "
                 + "Direccion = '" + objPersona.getDireccion() + "', "
@@ -105,7 +103,6 @@ public class DAO_Persona {
             this.objPersona= new DTO_Persona(
                     this.resultSet.getString("DNI"),
                     this.resultSet.getString("Nombre"),
-                    this.objDataRol.getSingleRol(this.resultSet.getInt("Id_Rol")),
                     this.resultSet.getString("Telefono"),
                     this.resultSet.getString("Direccion"),new Timestamp(new Date(this.resultSet.getTimestamp("Fecha").getTime()), this.timestampCertificates.getCertPath()),
                     this.resultSet.getString("Fecha_Nacimiento"));

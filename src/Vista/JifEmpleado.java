@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  * @author MARCELO RUENES
  */
 public class JifEmpleado extends javax.swing.JInternalFrame {
-
+    
     private Excepciones objExcepciones;
     private DAO_Rol objDataRol;
     private DAO_Persona objDataPersona;
@@ -33,6 +33,11 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
      */
     public JifEmpleado() {
         initComponents();
+        try {
+            fillCbxRol();
+        } catch (SQLException ex) {
+            Logger.getLogger(JifEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -78,6 +83,16 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         jLabel6.setText("Direcciión:");
 
         TxtIdEmp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtIdEmp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtIdEmpActionPerformed(evt);
+            }
+        });
+        TxtIdEmp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TxtIdEmpKeyPressed(evt);
+            }
+        });
 
         TxtNombreEmp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         TxtNombreEmp.addActionListener(new java.awt.event.ActionListener() {
@@ -107,7 +122,6 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("ROL:");
 
-        Cbx_Rol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1. EMPLEADO", "2. PROVEEDOR", "3. REPRESENTANTE LEGAL", "4. ADMINISTRADOR" }));
         Cbx_Rol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Cbx_RolActionPerformed(evt);
@@ -193,15 +207,14 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
 
     private void BtnAgregarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarEmpleadoActionPerformed
         try {
-            DAO_Persona objDataPersona = new DAO_Persona();
+            //DAO_Persona objDataPersona = new DAO_Persona();
             TimestampCertificates tc = new TimestampCertificates();
             if (this.objExcepciones.validarCamposPersona(TxtIdEmp, TxtNombreEmp, TxtFechaNacEmp, TxtTelEmp, TxtDirEmp)
                     && this.objExcepciones.validarCamposErrPersona(TxtIdEmp, TxtNombreEmp, TxtFechaNacEmp, TxtTelEmp, TxtDirEmp)) {
-
+                
                 if (this.TxtIdEmp.isEnabled()) {
-                    if (objDataPersona.registrarNuevaPersona(new DTO_Persona(this.TxtIdEmp.getText(),
+                    if (this.objDataPersona.registrarNuevaPersona(new DTO_Persona(this.TxtIdEmp.getText(),
                             this.TxtNombreEmp.getText().toUpperCase(),
-                            this.getRolById(),
                             this.TxtTelEmp.getText(),
                             this.TxtDirEmp.getText(),
                             new Timestamp(new Date(), tc.getCertPath()),
@@ -213,9 +226,8 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(this, "Algo salió mal", "Registro de persona", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    if (objDataPersona.modificarPersona(new DTO_Persona(this.TxtIdEmp.getText(),
+                    if (this.objDataPersona.modificarPersona(new DTO_Persona(this.TxtIdEmp.getText(),
                             this.TxtNombreEmp.getText().toUpperCase(),
-                            this.getRolById(),
                             this.TxtFechaNacEmp.getText(),
                             this.TxtTelEmp.getText(),
                             new Timestamp(new Date(), tc.getCertPath()),
@@ -227,11 +239,12 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(this, "Algo salió mal", "Modificación de persona", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-            }else {
+            } else {
                 JOptionPane.showMessageDialog(this, "No puede dejar campos vacios o erroneos", "Registro de persona", JOptionPane.ERROR_MESSAGE);
-           }
+            }
         } catch (SQLException ex) {
             if (ex.getErrorCode() == 0) {
+                System.out.println("Persona: "+ex.getMessage());
                 int res = JOptionPane.showConfirmDialog(this, "Esta persona ya se encuentra registrado\n"
                         + "¿Desea editarlo?", "Registro de persona", JOptionPane.ERROR_MESSAGE);
                 if (res == JOptionPane.YES_OPTION) {
@@ -251,12 +264,20 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_Cbx_RolActionPerformed
 
+    private void TxtIdEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtIdEmpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtIdEmpActionPerformed
+
+    private void TxtIdEmpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtIdEmpKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtIdEmpKeyPressed
+    
     private DTO_Rol getRolById() throws SQLException {
         String item = this.Cbx_Rol.getSelectedItem().toString();
         int id_Rol = Integer.parseInt(item.split("-")[0]);
         return this.objDataRol.getSingleRol(id_Rol);
     }
-
+    
     private void cleanAllInputs() {
         this.TxtIdEmp.setText("");
         this.TxtIdEmp.setEnabled(true);
@@ -265,8 +286,7 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         this.TxtTelEmp.setText("");
         this.TxtDirEmp.setText("");
     }
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregarEmpleado;
@@ -285,15 +305,25 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     // End of variables declaration//GEN-END:variables
 
-private void fillData(DTO_Persona objProducto) {
-        this.TxtIdEmp.setText(objProducto.getDNI());
-        this.TxtNombreEmp.setText(objProducto.getNombre());
-        this.Cbx_Rol.setSelectedItem(objProducto.getRol().getId_Rol()+ "- "
-                + objProducto.getRol().getNombre_Rol());
-        this.TxtTelEmp.setText(objProducto.getTelefono());
-        this.TxtDirEmp.setText(objProducto.getDireccion());
-        this.TxtFechaNacEmp.setText(objProducto.getFecha_Nacimiento());
+    private void fillData(DTO_Persona objPersona) {
+        this.TxtIdEmp.setText(objPersona.getDNI());
+        this.TxtNombreEmp.setText(objPersona.getNombre());
+        //this.Cbx_Rol.setSelectedItem(objPersona.getRol().getId_Rol() + "- "
+          //      + objPersona.getRol().getNombre_Rol());
+        this.TxtTelEmp.setText(objPersona.getTelefono());
+        this.TxtDirEmp.setText(objPersona.getDireccion());
+        this.TxtFechaNacEmp.setText(objPersona.getFecha_Nacimiento());
         this.BtnAgregarEmpleado.setText("Modificar persona");
+        
+    }
     
-}
+    private void fillCbxRol() throws SQLException {
+        this.objExcepciones = new Excepciones();
+        this.objDataRol = new DAO_Rol();
+        this.objDataPersona = new DAO_Persona();
+        this.objDataRol.getAllRoles().forEach(Rol -> {
+            this.Cbx_Rol.addItem(Rol.getId_Rol() + "- " + Rol.getNombre_Rol());
+        });
+    }
+    
 }

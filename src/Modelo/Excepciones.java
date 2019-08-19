@@ -110,7 +110,7 @@ public class Excepciones {
                 && !TxtNombreEmp.getText().trim().equals("")
                 && !TxtFechaNacEmp.getText().trim().equals("")
                 && !TxtTelEmp.getText().trim().equals("")
-                && !TxtNombreEmp.getText().trim().equals(""));
+                && !TxtDirEmp.getText().trim().equals(""));
     }
 
     /**
