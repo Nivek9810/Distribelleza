@@ -21,7 +21,7 @@ import java.util.Date;
  *
  * @author user
  */
-public class DAO_Producto {
+    public class DAO_Producto {
 
     //CRUD Producto
     private ArrayList<DTO_Producto> lista_Productos;

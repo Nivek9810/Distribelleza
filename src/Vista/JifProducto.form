@@ -343,10 +343,8 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="Lbl_CatTitulo" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="Btn_Categoria" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="Txt_Categoria" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="Btn_Categoria" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="Txt_Categoria" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="563" max="32767" attributes="0"/>
                   </Group>

@@ -21,6 +21,7 @@ public class JfMain extends javax.swing.JFrame {
     private JifProducto objJifProducto;
     private JifFactura objJifFactura;
     private JifListar_Productos obJifListar_Productos;
+    private JifEmpleado obJifEmpleado;
     private final Excepciones objExcepciones;
 
     public JfMain() {
@@ -48,15 +49,18 @@ public class JfMain extends javax.swing.JFrame {
         jMIEliminarProd = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMIVerProducto = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMCierre = new javax.swing.JMenu();
-        jMIGenerarCierre = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMCierre = new javax.swing.JMenu();
+        jMIGenerarCierre = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenu6 = new javax.swing.JMenu();
+        jMenu7 = new javax.swing.JMenu();
+        ItemAgregEmp = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,11 +68,11 @@ public class JfMain extends javax.swing.JFrame {
         jdpEscritorio.setLayout(jdpEscritorioLayout);
         jdpEscritorioLayout.setHorizontalGroup(
             jdpEscritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 369, Short.MAX_VALUE)
         );
         jdpEscritorioLayout.setVerticalGroup(
             jdpEscritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
+            .addGap(0, 270, Short.MAX_VALUE)
         );
 
         jMenu1.setText("Producto");
@@ -102,19 +106,6 @@ public class JfMain extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Cierre");
-
-        jMCierre.setText("Acción");
-
-        jMIGenerarCierre.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        jMIGenerarCierre.setText("Generar Cierre");
-        jMCierre.add(jMIGenerarCierre);
-
-        jMenu2.add(jMCierre);
-        jMenu2.add(jSeparator1);
-
-        jMenuBar1.add(jMenu2);
-
         jMenu3.setText("Venta");
 
         jMenu4.setText("Opciones");
@@ -139,17 +130,50 @@ public class JfMain extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
+        jMenu2.setText("Cierre");
+
+        jMCierre.setText("Acción");
+
+        jMIGenerarCierre.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMIGenerarCierre.setText("Generar Cierre");
+        jMCierre.add(jMIGenerarCierre);
+
+        jMenu2.add(jMCierre);
+        jMenu2.add(jSeparator1);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenu6.setText("Persona");
+
+        jMenu7.setText("Datos de empleado");
+
+        ItemAgregEmp.setText("jMenuItem4");
+        ItemAgregEmp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemAgregEmpActionPerformed(evt);
+            }
+        });
+        jMenu7.add(ItemAgregEmp);
+
+        jMenu6.add(jMenu7);
+
+        jMenuBar1.add(jMenu6);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jdpEscritorio)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jdpEscritorio)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jdpEscritorio)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jdpEscritorio))
         );
 
         pack();
@@ -177,6 +201,13 @@ public class JfMain extends javax.swing.JFrame {
         this.obJifListar_Productos.setVisible(true);
         this.obJifListar_Productos.setClosable(true);
     }//GEN-LAST:event_jMIEliminarProdActionPerformed
+
+    private void ItemAgregEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemAgregEmpActionPerformed
+        this.obJifEmpleado =new JifEmpleado();
+        this.objExcepciones.controlaInstancia(obJifEmpleado, jdpEscritorio);
+        this.obJifEmpleado.setVisible(true);
+        this.obJifEmpleado.setClosable(true);
+    }//GEN-LAST:event_ItemAgregEmpActionPerformed
 
     public void confGen(String Titulo) throws IOException {
         objJifProducto = new JifProducto(Titulo);
@@ -236,6 +267,7 @@ public class JfMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ItemAgregEmp;
     private javax.swing.JMenu jMAccionProd;
     private javax.swing.JMenu jMCierre;
     private javax.swing.JMenuItem jMIEliminarProd;
@@ -247,6 +279,8 @@ public class JfMain extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;

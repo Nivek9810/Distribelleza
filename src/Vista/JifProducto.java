@@ -443,7 +443,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_Txt_Id_ProdActionPerformed
 
     private void btn_RegistrarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RegistrarProdActionPerformed
-        try {
+            try {
             DAO_Producto objDataProducto = new DAO_Producto();
             TimestampCertificates tc = new TimestampCertificates();
             if (this.objExcepciones.validarCamposProducto(Txt_Id_Prod, Txt_Nombre, Spn_Precio_Compra, Spn_Cantidad, Spn_Porcentaje_Venta)
