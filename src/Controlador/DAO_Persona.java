@@ -105,7 +105,7 @@ public class DAO_Persona {
                     this.resultSet.getString("Nombre"),
                     this.resultSet.getString("Telefono"),
                     this.resultSet.getString("Direccion"),new Timestamp(new Date(this.resultSet.getTimestamp("Fecha").getTime()), this.timestampCertificates.getCertPath()),
-                    this.resultSet.getString("Fecha_Nacimiento"));
+                    this.resultSet.getDate("Fecha_Nacimiento"));
         }
 
         return this.objPersona;

@@ -57,12 +57,12 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         TxtIdEmp = new javax.swing.JTextField();
         TxtNombreEmp = new javax.swing.JTextField();
-        TxtFechaNacEmp = new javax.swing.JTextField();
         TxtTelEmp = new javax.swing.JTextField();
         TxtDirEmp = new javax.swing.JTextField();
         BtnAgregarEmpleado = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         Cbx_Rol = new javax.swing.JComboBox<>();
+        DchFechaNac = new com.toedter.calendar.JDateChooser();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("AGREGAR PERSONA");
@@ -92,6 +92,9 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TxtIdEmpKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TxtIdEmpKeyReleased(evt);
+            }
         });
 
         TxtNombreEmp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -100,8 +103,14 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                 TxtNombreEmpActionPerformed(evt);
             }
         });
-
-        TxtFechaNacEmp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        TxtNombreEmp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TxtNombreEmpKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TxtNombreEmpKeyReleased(evt);
+            }
+        });
 
         TxtTelEmp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         TxtTelEmp.addActionListener(new java.awt.event.ActionListener() {
@@ -137,28 +146,34 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel7))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TxtDirEmp, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                            .addComponent(TxtTelEmp)
-                            .addComponent(TxtFechaNacEmp)
-                            .addComponent(TxtNombreEmp)
-                            .addComponent(TxtIdEmp)
-                            .addComponent(Cbx_Rol, 0, 1, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel7))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(TxtTelEmp, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(TxtIdEmp, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(TxtNombreEmp)
+                                    .addComponent(Cbx_Rol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(TxtDirEmp)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                                .addComponent(DchFechaNac, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(jLabel1)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(69, 69, 69)
+                                .addComponent(jLabel1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(106, 106, 106)
+                                .addComponent(BtnAgregarEmpleado)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(106, 106, 106)
-                .addComponent(BtnAgregarEmpleado)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,9 +193,9 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                     .addComponent(jLabel7)
                     .addComponent(Cbx_Rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
-                    .addComponent(TxtFechaNacEmp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(DchFechaNac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -191,7 +206,7 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                     .addComponent(TxtDirEmp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(BtnAgregarEmpleado)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(148, Short.MAX_VALUE))
         );
 
         pack();
@@ -209,8 +224,8 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         try {
             //DAO_Persona objDataPersona = new DAO_Persona();
             TimestampCertificates tc = new TimestampCertificates();
-            if (this.objExcepciones.validarCamposPersona(TxtIdEmp, TxtNombreEmp, TxtFechaNacEmp, TxtTelEmp, TxtDirEmp)
-                    && this.objExcepciones.validarCamposErrPersona(TxtIdEmp, TxtNombreEmp, TxtFechaNacEmp, TxtTelEmp, TxtDirEmp)) {
+            if (this.objExcepciones.validarCamposPersona(TxtIdEmp, TxtNombreEmp, this.DchFechaNac, TxtTelEmp, TxtDirEmp)
+                    && this.objExcepciones.validarCamposErrPersona(TxtIdEmp, TxtNombreEmp, this.DchFechaNac, TxtTelEmp, TxtDirEmp)) {
                 
                 if (this.TxtIdEmp.isEnabled()) {
                     if (this.objDataPersona.registrarNuevaPersona(new DTO_Persona(this.TxtIdEmp.getText(),
@@ -218,7 +233,7 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                             this.TxtTelEmp.getText(),
                             this.TxtDirEmp.getText(),
                             new Timestamp(new Date(), tc.getCertPath()),
-                            this.TxtFechaNacEmp.getText()
+                            this.DchFechaNac.getDate()
                     ))) {
                         JOptionPane.showMessageDialog(this, "¡La persona " + this.TxtNombreEmp.getText().toUpperCase() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
                         this.cleanAllInputs();
@@ -228,10 +243,10 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                 } else {
                     if (this.objDataPersona.modificarPersona(new DTO_Persona(this.TxtIdEmp.getText(),
                             this.TxtNombreEmp.getText().toUpperCase(),
-                            this.TxtFechaNacEmp.getText(),
                             this.TxtTelEmp.getText(),
+                            this.TxtDirEmp.getText(),
                             new Timestamp(new Date(), tc.getCertPath()),
-                            this.TxtDirEmp.getText()
+                            this.DchFechaNac.getDate()
                     ))) {
                         JOptionPane.showMessageDialog(this, "¡La persona " + this.TxtNombreEmp.getText().toUpperCase() + " se ha modificado con éxito!", "Modificación de persona", JOptionPane.INFORMATION_MESSAGE);
                         this.cleanAllInputs();
@@ -269,8 +284,20 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_TxtIdEmpActionPerformed
 
     private void TxtIdEmpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtIdEmpKeyPressed
-        // TODO add your handling code here:
+        this.objExcepciones.validarNum(evt);
     }//GEN-LAST:event_TxtIdEmpKeyPressed
+
+    private void TxtIdEmpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtIdEmpKeyReleased
+        this.objExcepciones.validarExpresionTxt(this.TxtIdEmp, "^(\\d{2,11})$");
+    }//GEN-LAST:event_TxtIdEmpKeyReleased
+
+    private void TxtNombreEmpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtNombreEmpKeyPressed
+        this.objExcepciones.validarLetra(evt);
+    }//GEN-LAST:event_TxtNombreEmpKeyPressed
+
+    private void TxtNombreEmpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtNombreEmpKeyReleased
+        this.objExcepciones.validarExpresionTxt(this.TxtNombreEmp, "[a-zA-ZñÑ\\s]{2,40}");
+    }//GEN-LAST:event_TxtNombreEmpKeyReleased
     
     private DTO_Rol getRolById() throws SQLException {
         String item = this.Cbx_Rol.getSelectedItem().toString();
@@ -282,7 +309,7 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         this.TxtIdEmp.setText("");
         this.TxtIdEmp.setEnabled(true);
         this.TxtNombreEmp.setText("");
-        this.TxtFechaNacEmp.setText("");
+        this.DchFechaNac.setDateFormatString("");
         this.TxtTelEmp.setText("");
         this.TxtDirEmp.setText("");
     }
@@ -291,8 +318,8 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregarEmpleado;
     private javax.swing.JComboBox<String> Cbx_Rol;
+    private com.toedter.calendar.JDateChooser DchFechaNac;
     private javax.swing.JTextField TxtDirEmp;
-    private javax.swing.JTextField TxtFechaNacEmp;
     private javax.swing.JTextField TxtIdEmp;
     private javax.swing.JTextField TxtNombreEmp;
     private javax.swing.JTextField TxtTelEmp;
@@ -312,7 +339,7 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
           //      + objPersona.getRol().getNombre_Rol());
         this.TxtTelEmp.setText(objPersona.getTelefono());
         this.TxtDirEmp.setText(objPersona.getDireccion());
-        this.TxtFechaNacEmp.setText(objPersona.getFecha_Nacimiento());
+        this.DchFechaNac.setDate(objPersona.getFecha_Nacimiento());
         this.BtnAgregarEmpleado.setText("Modificar persona");
         
     }

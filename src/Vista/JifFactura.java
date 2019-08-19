@@ -7,6 +7,8 @@ package Vista;
 
 import Controlador.DAO_Producto;
 import Modelo.DTO_Producto;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +27,27 @@ public class JifFactura extends javax.swing.JInternalFrame {
 
     public JifFactura() {
         initComponents();
+        this.TxtProducto.grabFocus();
+        this.TxtProducto.requestFocusInWindow();
         this.objProducto = new DTO_Producto();
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ADD) {
+                    SpnCantidad.setValue((int) SpnCantidad.getValue() + 1);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
     }
 
     public JifFactura(String titulo) {
@@ -46,12 +68,12 @@ public class JifFactura extends javax.swing.JInternalFrame {
         lblTitulo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         LblIdFactura = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        AreaProductos = new javax.swing.JTextArea();
         TxtProducto = new javax.swing.JTextField();
         SpnCantidad = new javax.swing.JSpinner();
         BtnAgregar = new javax.swing.JButton();
-        SpnFecha = new javax.swing.JSpinner();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setIconifiable(true);
         setMaximizable(true);
@@ -65,66 +87,90 @@ public class JifFactura extends javax.swing.JInternalFrame {
         LblIdFactura.setText("\"\"");
         LblIdFactura.setVerifyInputWhenFocusTarget(false);
 
-        AreaProductos.setColumns(20);
-        AreaProductos.setRows(5);
-        jScrollPane1.setViewportView(AreaProductos);
-
         TxtProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TxtProductoActionPerformed(evt);
             }
         });
+        TxtProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TxtProductoKeyPressed(evt);
+            }
+        });
 
         SpnCantidad.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+        SpnCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                SpnCantidadKeyPressed(evt);
+            }
+        });
 
         BtnAgregar.setText("AGREGAR");
 
-        SpnFecha.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), new java.util.Date(), new java.util.Date(), java.util.Calendar.DAY_OF_MONTH));
-        SpnFecha.setEnabled(false);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Referencia", "Precio", "Cant"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        jScrollPane2.setViewportView(jScrollPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(BtnAgregar)
-                .addGap(38, 38, 38))
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(LblIdFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(SpnFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblTitulo)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(LblIdFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblTitulo)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BtnAgregar)))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitulo)
-                .addGap(25, 25, 25)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(LblIdFactura)
-                    .addComponent(SpnFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LblIdFactura))
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnAgregar))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
 
         pack();
@@ -133,11 +179,11 @@ public class JifFactura extends javax.swing.JInternalFrame {
     private void TxtProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtProductoActionPerformed
         try {
             DAO_Producto objDataProducto = new DAO_Producto();
-            this.AreaProductos.setEnabled(false);
+//            this.AreaProductos.setEnabled(false);
             this.objProducto = objDataProducto.getSingleProducto(this.TxtProducto.getText());
-            AreaProductos.append(this.objProducto.getNombre() + " | "
-                    + (int)(this.objProducto.getPrecio_Compra() - (this.objProducto.getPorcentaje_Venta() * this.objProducto.getPrecio_Compra())));
-            AreaProductos.append(System.getProperty("line.separator")); // Esto para el salto de línea 
+            //AreaProductos.append(this.objProducto.getNombre() + " | "
+            //        + (int) (this.objProducto.getPrecio_Compra() - (this.objProducto.getPorcentaje_Venta() * this.objProducto.getPrecio_Compra())));
+            //AreaProductos.append(System.getProperty("line.separator")); // Esto para el salto de línea 
             //JOptionPane.showMessageDialog(this, " " + this.TxtProducto.getText());
 
         } catch (SQLException ex) {
@@ -146,16 +192,29 @@ public class JifFactura extends javax.swing.JInternalFrame {
         this.TxtProducto.setText("");
     }//GEN-LAST:event_TxtProductoActionPerformed
 
+    private void SpnCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SpnCantidadKeyPressed
+
+    }//GEN-LAST:event_SpnCantidadKeyPressed
+
+    private void TxtProductoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtProductoKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            SpnCantidad.setValue((int) SpnCantidad.getValue() + 1);
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            SpnCantidad.setValue((int) SpnCantidad.getValue() - 1);
+        }
+    }//GEN-LAST:event_TxtProductoKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea AreaProductos;
     private javax.swing.JButton BtnAgregar;
     private javax.swing.JLabel LblIdFactura;
     private javax.swing.JSpinner SpnCantidad;
-    private javax.swing.JSpinner SpnFecha;
     private javax.swing.JTextField TxtProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

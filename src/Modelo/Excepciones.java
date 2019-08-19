@@ -5,6 +5,7 @@
  */
 package Modelo;
 
+import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.IOException;
@@ -105,10 +106,10 @@ public class Excepciones {
                 && Double.parseDouble(Spn_Porcentaje_Venta.getValue().toString()) > 0);
     }
     
-    public boolean validarCamposPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp,JTextField TxtFechaNacEmp,JTextField TxtTelEmp, JTextField TxtDirEmp) {
+    public boolean validarCamposPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp,JDateChooser TxtFechaNacEmp,JTextField TxtTelEmp, JTextField TxtDirEmp) {
         return (!TxtIdEmp.getText().trim().equals("")
                 && !TxtNombreEmp.getText().trim().equals("")
-                && !TxtFechaNacEmp.getText().trim().equals("")
+                && TxtFechaNacEmp.getDate() != null
                 && !TxtTelEmp.getText().trim().equals("")
                 && !TxtDirEmp.getText().trim().equals(""));
     }
@@ -135,7 +136,7 @@ public class Excepciones {
                 && !Spn_Porcentaje_Venta.getForeground().equals(Color.red));
     }
     
-    public boolean validarCamposErrPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp,JTextField TxtFechaNacEmp,JTextField TxtTelEmp, JTextField TxtDirEmp) {
+    public boolean validarCamposErrPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp,JDateChooser TxtFechaNacEmp,JTextField TxtTelEmp, JTextField TxtDirEmp) {
         return (!TxtIdEmp.getForeground().equals(Color.red)
                 && !TxtNombreEmp.getForeground().equals(Color.red)
                 && !TxtFechaNacEmp.getForeground().equals(Color.red)

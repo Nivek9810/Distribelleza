@@ -6,6 +6,7 @@
 package Modelo;
 
 import java.security.Timestamp;
+import java.util.Date;
 
 /**
  *
@@ -13,10 +14,11 @@ import java.security.Timestamp;
  */
 public class DTO_Persona {
 
-    private String DNI, Nombre, Telefono, Direccion, Fecha_Nacimiento;
+    private String DNI, Nombre, Telefono, Direccion;
+    private Date Fecha_Nacimiento;
     private Timestamp Fecha;
 
-    public DTO_Persona(String DNI, String Nombre, String Telefono, String Direccion, Timestamp Fecha, String Fecha_Nacimiento) {
+    public DTO_Persona(String DNI, String Nombre, String Telefono, String Direccion, Timestamp Fecha, Date Fecha_Nacimiento) {
         this.DNI = DNI;
         this.Nombre = Nombre;
         this.Telefono = Telefono;
@@ -32,7 +34,7 @@ public class DTO_Persona {
         this.Telefono = "";
         this.Direccion = "";
         this.Fecha = null;
-        this.Fecha_Nacimiento = "";
+        this.Fecha_Nacimiento = new Date();
     }
 
     public String getDNI() {
@@ -55,7 +57,7 @@ public class DTO_Persona {
         return Fecha;
     }
 
-    public String getFecha_Nacimiento() {
+    public Date getFecha_Nacimiento() {
         return Fecha_Nacimiento;
     }
 
