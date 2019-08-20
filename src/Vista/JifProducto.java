@@ -442,7 +442,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_Txt_Id_ProdActionPerformed
 
     private void btn_RegistrarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RegistrarProdActionPerformed
-            try {
+        try {
             DAO_Producto objDataProducto = new DAO_Producto();
             TimestampCertificates tc = new TimestampCertificates();
             if (this.objExcepciones.validarCamposProducto(Txt_Id_Prod, Txt_Nombre, Spn_Precio_Compra, Spn_Cantidad, Spn_Porcentaje_Venta)
@@ -457,7 +457,8 @@ public class JifProducto extends javax.swing.JInternalFrame {
                             Double.parseDouble(this.Spn_Precio_Compra.getValue().toString()),
                             (int) this.Spn_Cantidad.getValue(),
                             Double.parseDouble(this.Spn_Porcentaje_Venta.getValue().toString()) / 100,
-                            new Timestamp(new Date(), tc.getCertPath())
+                            new Timestamp(new Date(), tc.getCertPath()),
+                            true
                     ))) {
                         JOptionPane.showMessageDialog(this, "¡El producto " + this.Txt_Nombre.getText().toUpperCase() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
                         this.cleanAllInputs();
@@ -493,7 +494,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
                         + "¿Desea editarlo?", "Registro de producto", JOptionPane.ERROR_MESSAGE);
                 if (res == JOptionPane.YES_OPTION) {
                     try {
-                        this.fillData(this.objDataProducto.getSingleProducto(this.Txt_Id_Prod.getText()));
+                        this.fillData(this.objDataProducto.getSingleProducto(this.Txt_Id_Prod.getText(), true));
                     } catch (SQLException exSP) {
                         Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, exSP);
                     }
@@ -603,11 +604,11 @@ public class JifProducto extends javax.swing.JInternalFrame {
 
         try {
 
-            this.objDataCategoria.getAllCategories().
+            this.objDataCategoria.getAllCategories(true).
                     forEach(category
                             -> this.Cbx_Categoría.addItem(category.getId_Categoria() + "- " + category.getNombre()));
 
-            objDataMarca.getAllMarcas().
+            objDataMarca.getAllMarcas(true).
                     forEach(marca
                             -> this.Cbx_Marca.addItem(marca.getId_Marca() + "- " + marca.getNombre() + " de " + marca.getProveedor().getNombre()));
 
@@ -619,13 +620,13 @@ public class JifProducto extends javax.swing.JInternalFrame {
     private DTO_Categoria getCategoryById() throws SQLException {
         String item = this.Cbx_Categoría.getSelectedItem().toString();
         int id_category = Integer.parseInt(item.split("-")[0]);
-        return this.objDataCategoria.getSingleCategory(id_category);
+        return this.objDataCategoria.getSingleCategory(id_category, true);
     }
 
     private DTO_Marca getMarcaById() throws SQLException {
         String item = this.Cbx_Marca.getSelectedItem().toString();
         int id_marca = Integer.parseInt(item.split("-")[0]);
-        return this.objDataMarca.getSingleMarca(id_marca);
+        return this.objDataMarca.getSingleMarca(id_marca, true);
     }
 
     private void cleanAllInputs() {

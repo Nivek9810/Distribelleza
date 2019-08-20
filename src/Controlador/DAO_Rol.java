@@ -46,9 +46,9 @@ public class DAO_Rol {
         this.statement = conection.createStatement();
     }
 
-    public ArrayList<DTO_Rol> getAllRoles() throws SQLException {
+    public ArrayList<DTO_Rol> getAllRoles(boolean state) throws SQLException {
         this.lista_Rol.clear();
-        String consulta = "SELECT * FROM ROL;";
+        String consulta = "SELECT * FROM ROL WHERE Activo = "+state+";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.lista_Rol.add(new DTO_Rol(resultSet.getInt("Id_Rol"),
@@ -57,10 +57,10 @@ public class DAO_Rol {
         return this.lista_Rol;
     }
 
-    public DTO_Rol getSingleRol(int id_Rol) throws SQLException {
+    public DTO_Rol getSingleRol(int id_Rol, boolean state) throws SQLException {
         this.objRol = null;
 
-        String consulta = "SELECT * FROM ROL WHERE Id_Rol=" + id_Rol+ ";";
+        String consulta = "SELECT * FROM ROL WHERE Id_Rol=" + id_Rol+ " AND Activo = "+state+";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.objRol = new DTO_Rol(

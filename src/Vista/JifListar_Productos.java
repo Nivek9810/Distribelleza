@@ -27,12 +27,14 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
     private DAO_Producto objDataProducto;
     private ArrayList<DTO_Producto> productList;
     private Excepciones objExcepciones;
+    private boolean current_state;
 
     /**
      * Creates new form JifListar_Productos
      */
     public JifListar_Productos() {
         initComponents();
+        this.current_state = true;
         this.objExcepciones = new Excepciones();
 
         //Creamos nuestro diseño de tabla definimos las columnas
@@ -52,7 +54,7 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         modelo.addColumn("Fecha de carga");
         try {
             this.objDataProducto = new DAO_Producto();
-            this.productList = this.objDataProducto.getAllProducts();
+            this.productList = this.objDataProducto.getAllProducts(this.current_state);
         } catch (SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
@@ -72,6 +74,8 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Tbl_Productos = new javax.swing.JTable();
@@ -79,11 +83,14 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         Btn_Eliminar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         Txt_Search = new javax.swing.JTextField();
-        Btn_Buscar = new javax.swing.JButton();
+        btnEstado = new javax.swing.JToggleButton();
 
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI Historic", 0, 18)); // NOI18N
+        lblTitulo.setText("Administración de productos");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista de Productos"));
 
@@ -121,11 +128,16 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
                 Txt_SearchActionPerformed(evt);
             }
         });
+        Txt_Search.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Txt_SearchKeyReleased(evt);
+            }
+        });
 
-        Btn_Buscar.setText("Buscar");
-        Btn_Buscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Btn_BuscarActionPerformed(evt);
+        btnEstado.setText("Cambiar de estado");
+        btnEstado.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnEstadoItemStateChanged(evt);
             }
         });
 
@@ -133,10 +145,11 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1035, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(4, 4, 4)
                 .addComponent(Btn_Editar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Btn_Eliminar)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -144,53 +157,93 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Txt_Search, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Btn_Buscar)
+                .addGap(34, 34, 34)
+                .addComponent(btnEstado)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(Txt_Search, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Btn_Buscar))
+                    .addComponent(btnEstado))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Btn_Editar)
-                    .addComponent(Btn_Eliminar)))
+                    .addComponent(Btn_Eliminar)
+                    .addComponent(Btn_Editar))
+                .addGap(125, 125, 125))
         );
+
+        jTabbedPane1.addTab("Productos Activos", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(45, 45, 45)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(710, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(43, 43, 43)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(68, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lblTitulo)
+                    .addContainerGap(495, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Txt_SearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_SearchKeyReleased
+        this.search();
+    }//GEN-LAST:event_Txt_SearchKeyReleased
+
+    private void Txt_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Txt_SearchActionPerformed
+        this.search();
+        this.Txt_Search.setText("");
+    }//GEN-LAST:event_Txt_SearchActionPerformed
+
+    private void Btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_EliminarActionPerformed
+        int selected_Row = this.Tbl_Productos.getSelectedRow();
+        if (selected_Row >= 0) {
+            int resp = JOptionPane.showConfirmDialog(this,
+                    "¿Esta seguro de eliminar el producto " + this.modelo.getValueAt(selected_Row, 1) + "\n"
+                    + "Recuerde que esta opción es ireversible.",
+                    "Eliminar producto", JOptionPane.WARNING_MESSAGE);
+            if (resp == JOptionPane.YES_OPTION) {
+                try {
+                    this.objDataProducto.modificarEstadoProducto(this.modelo.getValueAt(selected_Row, 0).toString().trim(), !this.current_state);
+                    this.modelo.removeRow(selected_Row);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JifListar_Productos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un elemento de la lista.", "¡Adventencia!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Btn_EliminarActionPerformed
+
     private void Btn_EditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_EditarActionPerformed
         int selected_Row = this.Tbl_Productos.getSelectedRow();
         if (selected_Row >= 0) {
             try {
-                JOptionPane.showMessageDialog(this, "Elemento seleccionado: " + this.modelo.getValueAt(selected_Row, 3), "Editar productos", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Elemento seleccionado: " + this.modelo.getValueAt(selected_Row, 1), "Editar productos", JOptionPane.INFORMATION_MESSAGE);
 
-                this.objProducto = this.objDataProducto.getSingleProducto(this.modelo.getValueAt(selected_Row, 0).toString());
+                this.objProducto = this.objDataProducto.getSingleProducto(this.modelo.getValueAt(selected_Row, 0).toString(), this.current_state);
                 this.jifProducto = new JifProducto(objProducto, "Editar producto " + this.objProducto.getNombre());
                 this.objExcepciones.controlaInstancia(this.jifProducto, this.getDesktopPane());
                 jifProducto.setClosable(true);
@@ -205,48 +258,31 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         //System.out.println("Selected: " + this.Tbl_Productos.getSelectedRow());
     }//GEN-LAST:event_Btn_EditarActionPerformed
 
-    private void Btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_EliminarActionPerformed
-        int selected_Row = this.Tbl_Productos.getSelectedRow();
-        if (selected_Row >= 0) {
-            int resp = JOptionPane.showConfirmDialog(this,
-                    "¿Esta seguro de eliminar el producto " + this.modelo.getValueAt(selected_Row, 1) + "\n"
-                    + "Recuerde que esta opción es ireversible.",
-                    "Eliminar producto", JOptionPane.WARNING_MESSAGE);
-            if (resp == JOptionPane.YES_OPTION) {
-                //try {
-                //this.objDataProducto.eliminarProducto(this.modelo.getValueAt(selected_Row, 0).toString());
-                this.modelo.removeRow(selected_Row);
-                //} catch (SQLException ex) {
-                //    Logger.getLogger(JifListar_Productos.class.getName()).log(Level.SEVERE, null, ex);
-                //}
-
-            }
+    private void btnEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnEstadoItemStateChanged
+        if (this.btnEstado.isSelected()) {
+            this.btnEstado.setText("Inactivos");
+            this.Btn_Eliminar.setText("Reestablecer");
+            this.current_state = false;
         } else {
-            JOptionPane.showMessageDialog(this, "Debes seleccionar un elemento de la lista.", "¡Adventencia!", JOptionPane.WARNING_MESSAGE);
+            this.btnEstado.setText("Activos");
+            this.Btn_Eliminar.setText("Eliminar");
+            this.current_state = true;
         }
-
-    }//GEN-LAST:event_Btn_EliminarActionPerformed
-
-    private void Btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_BuscarActionPerformed
         this.search();
-        this.Txt_Search.setText("");
-    }//GEN-LAST:event_Btn_BuscarActionPerformed
-
-    private void Txt_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Txt_SearchActionPerformed
-        this.search();
-        this.Txt_Search.setText("");
-    }//GEN-LAST:event_Txt_SearchActionPerformed
+    }//GEN-LAST:event_btnEstadoItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Btn_Buscar;
     private javax.swing.JButton Btn_Editar;
     private javax.swing.JButton Btn_Eliminar;
     private javax.swing.JTable Tbl_Productos;
     private javax.swing.JTextField Txt_Search;
+    private javax.swing.JToggleButton btnEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 
     private void addRows() {
@@ -270,7 +306,7 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
             for (int i = this.Tbl_Productos.getRowCount() - 1; i >= 0; i--) {
                 this.modelo.removeRow(i);
             }
-            this.productList = this.objDataProducto.getProductosByQuery(this.Txt_Search.getText().toUpperCase());
+            this.productList = this.objDataProducto.getProductosByQuery(this.Txt_Search.getText().toUpperCase(), this.current_state);
             this.addRows();
         } catch (SQLException ex) {
             Logger.getLogger(JifListar_Productos.class.getName()).log(Level.SEVERE, null, ex);

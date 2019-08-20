@@ -46,27 +46,27 @@ public class DAO_Marca {
         this.statement = conection.createStatement();
     }
 
-    public ArrayList<DTO_Marca> getAllMarcas() throws SQLException {
+    public ArrayList<DTO_Marca> getAllMarcas(boolean state) throws SQLException {
         this.lista_Marcas.clear();
-        String consulta = "SELECT * FROM MARCA;";
+        String consulta = "SELECT * FROM MARCA WHERE Activo = " + state + ";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.lista_Marcas.add(new DTO_Marca(
                     resultSet.getInt("Id_Marca"),
-                    this.objDataPersona.getSinglePersona(resultSet.getString("Id_Proveedor")),
+                    this.objDataPersona.getSinglePersona(resultSet.getString("Id_Proveedor"), true),
                     resultSet.getString("Nombre")));
         }
         return this.lista_Marcas;
     }
 
-    public DTO_Marca getSingleMarca(int id_marca) throws SQLException {
+    public DTO_Marca getSingleMarca(int id_marca, boolean state) throws SQLException {
         this.objMarca = null;
-        String consulta = "SELECT * FROM MARCA WHERE Id_Marca = " + id_marca + ";";
+        String consulta = "SELECT * FROM MARCA WHERE Id_Marca = " + id_marca + " AND Activo = " + state + ";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.objMarca = new DTO_Marca(
                     resultSet.getInt("Id_Marca"),
-                    this.objDataPersona.getSinglePersona(resultSet.getString("Id_Proveedor")),
+                    this.objDataPersona.getSinglePersona(resultSet.getString("Id_Proveedor"), true),
                     resultSet.getString("Nombre"));
         }
         return this.objMarca;

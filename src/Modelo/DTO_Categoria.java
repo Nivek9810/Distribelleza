@@ -13,10 +13,17 @@ public class DTO_Categoria {
 
     private int Id_Categoria;
     private String Nombre;
+    private boolean Activo;
 
     public DTO_Categoria(int Id_Categoria, String Nombre) {
         this.Id_Categoria = Id_Categoria;
         this.Nombre = Nombre;
+    }
+    
+    public DTO_Categoria(int Id_Categoria, String Nombre, boolean Activo) {
+        this.Id_Categoria = Id_Categoria;
+        this.Nombre = Nombre;
+        this.Activo = Activo;
     }
 
     public DTO_Categoria() {
@@ -32,4 +39,7 @@ public class DTO_Categoria {
         return Nombre;
     }
     
+    public boolean isActivo(){
+        return Activo;
+    }
 }

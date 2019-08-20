@@ -180,7 +180,7 @@ public class JifFactura extends javax.swing.JInternalFrame {
         try {
             DAO_Producto objDataProducto = new DAO_Producto();
 //            this.AreaProductos.setEnabled(false);
-            this.objProducto = objDataProducto.getSingleProducto(this.TxtProducto.getText());
+            this.objProducto = objDataProducto.getSingleProducto(this.TxtProducto.getText(), true);
             //AreaProductos.append(this.objProducto.getNombre() + " | "
             //        + (int) (this.objProducto.getPrecio_Compra() - (this.objProducto.getPorcentaje_Venta() * this.objProducto.getPrecio_Compra())));
             //AreaProductos.append(System.getProperty("line.separator")); // Esto para el salto de línea 

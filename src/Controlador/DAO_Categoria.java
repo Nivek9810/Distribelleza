@@ -45,9 +45,9 @@ public class DAO_Categoria {
         this.statement = conection.createStatement();
     }
 
-    public ArrayList<DTO_Categoria> getAllCategories() throws SQLException {
+    public ArrayList<DTO_Categoria> getAllCategories(boolean state) throws SQLException {
         this.lista_Categorias.clear();
-        String consulta = "SELECT * FROM CATEGORIA;";
+        String consulta = "SELECT * FROM CATEGORIA WHERE Activo = " + state + ";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.lista_Categorias.add(new DTO_Categoria(resultSet.getInt("Id_Categoria"),
@@ -56,10 +56,10 @@ public class DAO_Categoria {
         return this.lista_Categorias;
     }
 
-    public DTO_Categoria getSingleCategory(int id_categoria) throws SQLException {
+    public DTO_Categoria getSingleCategory(int id_categoria, boolean state) throws SQLException {
         this.objCategoria = null;
 
-        String consulta = "SELECT * FROM CATEGORIA WHERE Id_Categoria=" + id_categoria + ";";
+        String consulta = "SELECT * FROM CATEGORIA WHERE Id_Categoria=" + id_categoria + " AND Activo = " + state + ";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.objCategoria = new DTO_Categoria(

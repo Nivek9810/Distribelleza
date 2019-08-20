@@ -17,6 +17,7 @@ public class DTO_Persona {
     private String DNI, Nombre, Telefono, Direccion;
     private Date Fecha_Nacimiento;
     private Timestamp Fecha;
+    private boolean Activo;
 
     public DTO_Persona(String DNI, String Nombre, String Telefono, String Direccion, Timestamp Fecha, Date Fecha_Nacimiento) {
         this.DNI = DNI;
@@ -25,9 +26,18 @@ public class DTO_Persona {
         this.Direccion = Direccion;
         this.Fecha = Fecha;
         this.Fecha_Nacimiento = Fecha_Nacimiento;
-
     }
 
+    public DTO_Persona(String DNI, String Nombre, String Telefono, String Direccion, Timestamp Fecha, Date Fecha_Nacimiento, boolean Activo) {
+        this.DNI = DNI;
+        this.Nombre = Nombre;
+        this.Telefono = Telefono;
+        this.Direccion = Direccion;
+        this.Fecha_Nacimiento = Fecha_Nacimiento;
+        this.Fecha = Fecha;
+        this.Activo = Activo;
+    }
+    
     public DTO_Persona() {
         this.DNI = "";
         this.Nombre = "";
@@ -35,6 +45,7 @@ public class DTO_Persona {
         this.Direccion = "";
         this.Fecha = null;
         this.Fecha_Nacimiento = new Date();
+        this.Activo = false;
     }
 
     public String getDNI() {
@@ -60,5 +71,9 @@ public class DTO_Persona {
     public Date getFecha_Nacimiento() {
         return Fecha_Nacimiento;
     }
+    
+    public boolean isActivo(){
+        return Activo;
+    }        
 
 }
