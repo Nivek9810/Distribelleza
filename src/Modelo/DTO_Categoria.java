@@ -5,6 +5,8 @@
  */
 package Modelo;
 
+import javax.swing.JTextField;
+
 /**
  *
  * @author user
@@ -19,9 +21,14 @@ public class DTO_Categoria {
         this.Id_Categoria = Id_Categoria;
         this.Nombre = Nombre;
     }
-    
+
     public DTO_Categoria(int Id_Categoria, String Nombre, boolean Activo) {
         this.Id_Categoria = Id_Categoria;
+        this.Nombre = Nombre;
+        this.Activo = Activo;
+    }
+
+    public DTO_Categoria(String Nombre, boolean Activo) {
         this.Nombre = Nombre;
         this.Activo = Activo;
     }
@@ -38,8 +45,12 @@ public class DTO_Categoria {
     public String getNombre() {
         return Nombre;
     }
-    
-    public boolean isActivo(){
+
+    public boolean isActivo() {
         return Activo;
+    }
+
+    public void setNombre(String Nombre) {
+        this.Nombre = Nombre;
     }
 }

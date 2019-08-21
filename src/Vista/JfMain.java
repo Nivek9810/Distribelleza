@@ -22,14 +22,21 @@ public class JfMain extends javax.swing.JFrame {
     private JifFactura objJifFactura;
     private JifListar_Productos obJifListar_Productos;
     private JifEmpleado obJifEmpleado;
+    private JifLogin objJifLogin;
+    private JifCierre objJifCierre;
     private final Excepciones objExcepciones;
 
     public JfMain() {
         initComponents();
         this.setExtendedState(JfMain.MAXIMIZED_BOTH);
-        this.objJifProducto = new JifProducto();
-        this.objJifFactura = new JifFactura();
         this.objExcepciones = new Excepciones();
+
+        this.objJifLogin = new JifLogin();
+        if (this.objJifLogin.getObjPersona_Rol() == null) {
+            this.MBR_Opciones.setEnabled(false);
+        }
+        this.objExcepciones.controlaInstancia(this.objJifLogin, this.jdpEscritorio);
+        this.objJifLogin.setVisible(true);
     }
 
     /**
@@ -42,7 +49,7 @@ public class JfMain extends javax.swing.JFrame {
     private void initComponents() {
 
         jdpEscritorio = new javax.swing.JDesktopPane();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        MBR_Opciones = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMAccionProd = new javax.swing.JMenu();
         jMINuevoProducto = new javax.swing.JMenuItem();
@@ -54,13 +61,13 @@ public class JfMain extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu6 = new javax.swing.JMenu();
+        jMenu7 = new javax.swing.JMenu();
+        ItemAgregEmp = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMCierre = new javax.swing.JMenu();
         jMIGenerarCierre = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenu6 = new javax.swing.JMenu();
-        jMenu7 = new javax.swing.JMenu();
-        ItemAgregEmp = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -104,7 +111,7 @@ public class JfMain extends javax.swing.JFrame {
         jMIVerProducto.setText("Ver Producto");
         jMenu1.add(jMIVerProducto);
 
-        jMenuBar1.add(jMenu1);
+        MBR_Opciones.add(jMenu1);
 
         jMenu3.setText("Venta");
 
@@ -128,20 +135,7 @@ public class JfMain extends javax.swing.JFrame {
 
         jMenu3.add(jMenu5);
 
-        jMenuBar1.add(jMenu3);
-
-        jMenu2.setText("Cierre");
-
-        jMCierre.setText("Acción");
-
-        jMIGenerarCierre.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        jMIGenerarCierre.setText("Generar Cierre");
-        jMCierre.add(jMIGenerarCierre);
-
-        jMenu2.add(jMCierre);
-        jMenu2.add(jSeparator1);
-
-        jMenuBar1.add(jMenu2);
+        MBR_Opciones.add(jMenu3);
 
         jMenu6.setText("Persona");
 
@@ -158,9 +152,27 @@ public class JfMain extends javax.swing.JFrame {
 
         jMenu6.add(jMenu7);
 
-        jMenuBar1.add(jMenu6);
+        MBR_Opciones.add(jMenu6);
 
-        setJMenuBar(jMenuBar1);
+        jMenu2.setText("Cierre");
+
+        jMCierre.setText("Acción");
+
+        jMIGenerarCierre.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMIGenerarCierre.setText("Generar Cierre");
+        jMIGenerarCierre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIGenerarCierreActionPerformed(evt);
+            }
+        });
+        jMCierre.add(jMIGenerarCierre);
+
+        jMenu2.add(jMCierre);
+        jMenu2.add(jSeparator1);
+
+        MBR_Opciones.add(jMenu2);
+
+        setJMenuBar(MBR_Opciones);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -200,11 +212,18 @@ public class JfMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jMIEliminarProdActionPerformed
 
     private void ItemAgregEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemAgregEmpActionPerformed
-        this.obJifEmpleado =new JifEmpleado();
+        this.obJifEmpleado = new JifEmpleado();
         this.objExcepciones.controlaInstancia(obJifEmpleado, jdpEscritorio);
         this.obJifEmpleado.setVisible(true);
         this.obJifEmpleado.setClosable(true);
     }//GEN-LAST:event_ItemAgregEmpActionPerformed
+
+    private void jMIGenerarCierreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIGenerarCierreActionPerformed
+        this.objJifCierre = new JifCierre();
+        this.objExcepciones.controlaInstancia(this.objJifCierre, this.jdpEscritorio);
+        this.objJifCierre.setVisible(true);
+        this.objJifCierre.setClosable(true);
+    }//GEN-LAST:event_jMIGenerarCierreActionPerformed
 
     public void confGen(String Titulo) throws IOException {
         objJifProducto = new JifProducto(Titulo);
@@ -265,6 +284,7 @@ public class JfMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ItemAgregEmp;
+    private javax.swing.JMenuBar MBR_Opciones;
     private javax.swing.JMenu jMAccionProd;
     private javax.swing.JMenu jMCierre;
     private javax.swing.JMenuItem jMIEliminarProd;
@@ -278,7 +298,6 @@ public class JfMain extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPopupMenu.Separator jSeparator1;

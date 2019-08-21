@@ -29,6 +29,11 @@ public class DTO_Marca {
         this.Activo = Activo;
     }
 
+    public DTO_Marca(DTO_Persona Proveedor, String Nombre) {
+        this.Proveedor = Proveedor;
+        this.Nombre = Nombre;
+    }
+
     public DTO_Marca() {
         this.Id_Marca = 0;
         this.Proveedor = new DTO_Persona();
@@ -49,6 +54,14 @@ public class DTO_Marca {
 
     public boolean isActivo() {
         return Activo;
+    }
+
+    public void setNombre(String Nombre) {
+        this.Nombre = Nombre;
+    }
+
+    public void setProveedor(DTO_Persona Proveedor) {
+        this.Proveedor = Proveedor;
     }
 
 }

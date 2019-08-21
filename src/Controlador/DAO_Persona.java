@@ -23,6 +23,7 @@ import java.util.Date;
 public class DAO_Persona {
 
     private ArrayList<DTO_Persona> lista_Personas;
+    private ArrayList<DTO_Persona> lista_Proveedores;
 
     private DTO_Persona objPersona;
     private DTO_Rol objRol;
@@ -33,8 +34,9 @@ public class DAO_Persona {
     private Connection conection;
     private TimestampCertificates timestampCertificates;
 
-    public DAO_Persona(ArrayList<DTO_Persona> lista_Personas, DTO_Persona objPersona, DTO_Rol ObjRol, DAO_Rol objDataRol, Statement statement, Conexion con, ResultSet resultSet, Connection conection) {
+    public DAO_Persona(ArrayList<DTO_Persona> lista_Personas, ArrayList<DTO_Persona> lista_Proveedores, DTO_Persona objPersona, DTO_Rol ObjRol, DAO_Rol objDataRol, Statement statement, Conexion con, ResultSet resultSet, Connection conection) {
         this.lista_Personas = lista_Personas;
+        this.lista_Proveedores = lista_Proveedores;
         this.objPersona = objPersona;
         this.objRol = new DTO_Rol();
         this.objDataRol = objDataRol;
@@ -47,6 +49,7 @@ public class DAO_Persona {
 
     public DAO_Persona() throws SQLException {
         this.lista_Personas = new ArrayList<>();
+        this.lista_Proveedores = new ArrayList<>();
         this.objRol = new DTO_Rol();
         this.statement = null;
         this.resultSet = null;
@@ -99,6 +102,46 @@ public class DAO_Persona {
         }
 
         return this.objPersona;
+    }
+
+    public ArrayList<DTO_Persona> getAllProveedores(boolean state) throws SQLException {
+        this.lista_Proveedores.clear();
+        String query = "SELECT P.* FROM PERSONA AS P INNER JOIN PERSONA_ROL AS PR ON P.DNI = PR.DNI WHERE PR.Id_Rol = 2 AND P.Activo = " + state + ";";
+        this.resultSet = this.statement.executeQuery(query);
+        while (this.resultSet.next()) {
+            /*
+            String DNI, String Nombre, String Telefono, String Direccion, Timestamp Fecha, Date Fecha_Nacimiento
+             */
+            this.lista_Proveedores.add(new DTO_Persona(
+                    this.resultSet.getString("DNI"),
+                    this.resultSet.getString("Nombre"),
+                    this.resultSet.getString("Telefono"),
+                    this.resultSet.getString("Direccion"),
+                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha").getTime()), this.timestampCertificates.getCertPath()),
+                    this.resultSet.getDate("Fecha_Nacimiento"))
+            );
+        }
+        return this.lista_Proveedores;
+    }
+
+    public ArrayList<DTO_Persona> getAllPersonas(boolean state) throws SQLException {
+        this.lista_Personas.clear();
+        String query = "SELECT * FROM PERSONA AS P WHERE P.Activo = " + state + ";";
+        this.resultSet = this.statement.executeQuery(query);
+        while (this.resultSet.next()) {
+            /*
+            String DNI, String Nombre, String Telefono, String Direccion, Timestamp Fecha, Date Fecha_Nacimiento
+             */
+            this.lista_Personas.add(new DTO_Persona(
+                    this.resultSet.getString("DNI"),
+                    this.resultSet.getString("Nombre"),
+                    this.resultSet.getString("Telefono"),
+                    this.resultSet.getString("Direccion"),
+                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha").getTime()), this.timestampCertificates.getCertPath()),
+                    this.resultSet.getDate("Fecha_Nacimiento"))
+            );
+        }
+        return this.lista_Personas;
     }
 
 }

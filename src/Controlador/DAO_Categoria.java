@@ -69,4 +69,29 @@ public class DAO_Categoria {
         }
         return this.objCategoria;
     }
+
+    public boolean addNewCategory(DTO_Categoria objNewCategoria) throws SQLException {
+        String insert = "INSERT INTO "
+                + "CATEGORIA (Nombre, Activo)"
+                + "VALUES ('" + objNewCategoria.getNombre() + "', "
+                + objNewCategoria.isActivo() + ");";
+        int res = statement.executeUpdate(insert);
+        return (res > 0);
+    }
+
+    public boolean modificarEstadoCategoria(int id_categoria, boolean state) throws SQLException {
+        String updateState = "UPDATE CATEGORIA "
+                + "SET Activo = " + state + " "
+                + "WHERE Id_Categoria = '" + id_categoria + "';";
+        int res = statement.executeUpdate(updateState);
+        return (res > 0);
+    }
+    
+    public boolean modificarCategoria(DTO_Categoria objCategoria) throws SQLException {
+        String update = "UPDATE CATEGORIA "
+                + "SET Nombre = '" + objCategoria.getNombre() + "' "
+                + "WHERE Id_Categoria = " + objCategoria.getId_Categoria() + ";";
+        int res = statement.executeUpdate(update);
+        return (res > 0);
+    }
 }
