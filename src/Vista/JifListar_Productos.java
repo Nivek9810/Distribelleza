@@ -266,10 +266,6 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
 
     private void search() {
         try {
-            this.productList.clear();
-            for (int i = this.Tbl_Productos.getRowCount() - 1; i >= 0; i--) {
-                this.modelo.removeRow(i);
-            }
             this.productList = this.objDataProducto.getProductosByQuery(this.Txt_Search.getText().toUpperCase());
             this.addRows();
         } catch (SQLException ex) {

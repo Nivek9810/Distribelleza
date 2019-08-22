@@ -6,13 +6,32 @@
 package Vista;
 
 import Controlador.DAO_Producto;
+import Modelo.AtributosVenta;
+import Modelo.DTO_Persona;
 import Modelo.DTO_Producto;
+import Modelo.FacturaPdf;
+import static Modelo.FacturaPdf.fechaactual;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -23,13 +42,42 @@ public class JifFactura extends javax.swing.JInternalFrame {
     /**
      * Creates new form JifFactura
      */
+    private final DefaultTableModel modelo;
+    private DAO_Producto objDataProducto;
     private DTO_Producto objProducto;
+    private ArrayList<AtributosVenta> saleList;
+    private FacturaPdf objPDF;
+    private String Datos;
+    private AtributosVenta objVentas;
 
     public JifFactura() {
         initComponents();
         this.TxtProducto.grabFocus();
         this.TxtProducto.requestFocusInWindow();
         this.objProducto = new DTO_Producto();
+        this.objVentas = new AtributosVenta();
+        try {
+            this.objDataProducto = new DAO_Producto();
+        } catch (SQLException ex) {
+            Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.saleList = new ArrayList<>();
+        objPDF = new FacturaPdf();
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
+
+        modelo.addColumn("Código de barras");
+        modelo.addColumn("Producto");
+        modelo.addColumn("Cantidad");
+        modelo.addColumn("Precio unitario");
+        modelo.addColumn("Precio total");
+
+        this.TablaVentas.setModel(modelo);
+        Datos = "";
         this.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -54,6 +102,27 @@ public class JifFactura extends javax.swing.JInternalFrame {
         initComponents();
         this.lblTitulo.setText(titulo);
         this.objProducto = new DTO_Producto();
+        this.saleList = new ArrayList<>();
+        this.objVentas = new AtributosVenta();
+        try {
+            this.objDataProducto = new DAO_Producto();
+        } catch (SQLException ex) {
+            Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
+
+        modelo.addColumn("Código de barras");
+        modelo.addColumn("Producto");
+        modelo.addColumn("Cantidad");
+        modelo.addColumn("Precio unitario");
+        modelo.addColumn("Precio total");
+
+        this.TablaVentas.setModel(modelo);
     }
 
     /**
@@ -73,7 +142,7 @@ public class JifFactura extends javax.swing.JInternalFrame {
         BtnAgregar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaVentas = new javax.swing.JTable();
 
         setIconifiable(true);
         setMaximizable(true);
@@ -99,6 +168,11 @@ public class JifFactura extends javax.swing.JInternalFrame {
         });
 
         SpnCantidad.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+        SpnCantidad.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                SpnCantidadStateChanged(evt);
+            }
+        });
         SpnCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 SpnCantidadKeyPressed(evt);
@@ -106,27 +180,13 @@ public class JifFactura extends javax.swing.JInternalFrame {
         });
 
         BtnAgregar.setText("AGREGAR");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Referencia", "Precio", "Cant"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+        BtnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAgregarActionPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+
+        jScrollPane1.setViewportView(TablaVentas);
 
         jScrollPane2.setViewportView(jScrollPane1);
 
@@ -136,23 +196,26 @@ public class JifFactura extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(LblIdFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblTitulo)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BtnAgregar)))
-                .addContainerGap(46, Short.MAX_VALUE))
+                                .addGap(25, 25, 25)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(LblIdFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblTitulo)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(48, 48, 48)
+                                .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(BtnAgregar)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,32 +226,21 @@ public class JifFactura extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(LblIdFactura))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnAgregar))
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void TxtProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtProductoActionPerformed
-        try {
-            DAO_Producto objDataProducto = new DAO_Producto();
-//            this.AreaProductos.setEnabled(false);
-            this.objProducto = objDataProducto.getSingleProducto(this.TxtProducto.getText());
-            //AreaProductos.append(this.objProducto.getNombre() + " | "
-            //        + (int) (this.objProducto.getPrecio_Compra() - (this.objProducto.getPorcentaje_Venta() * this.objProducto.getPrecio_Compra())));
-            //AreaProductos.append(System.getProperty("line.separator")); // Esto para el salto de línea 
-            //JOptionPane.showMessageDialog(this, " " + this.TxtProducto.getText());
-
-        } catch (SQLException ex) {
-            Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.search();
         this.TxtProducto.setText("");
     }//GEN-LAST:event_TxtProductoActionPerformed
 
@@ -205,16 +257,106 @@ public class JifFactura extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_TxtProductoKeyPressed
 
+    private void BtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarActionPerformed
+        JFileChooser dig = new JFileChooser();
+        int option = dig.showSaveDialog(this);
+
+        String var = "";
+        if (option == JFileChooser.APPROVE_OPTION) {
+            File f = dig.getSelectedFile();
+            String f1 = f.toString();
+            var = f1;
+        }
+
+        try {
+            FileOutputStream archivo = new FileOutputStream(var + ".pdf");
+            Document doc = new Document();
+            PdfWriter.getInstance(doc, archivo);
+            doc.open();
+
+//                    
+            PdfPCell cellImagen = new PdfPCell();
+
+            doc.open();
+            PdfPTable TablaLogo = new PdfPTable(1);
+            TablaLogo.setWidthPercentage(12f);
+            PdfPCell cellImage;
+            Image image = Image.getInstance("C:\\Users\\MARCELO RUENES\\Desktop\\Distribelleza\\Distribelleza\\lobo.png");
+            cellImagen.setBorder(Rectangle.NO_BORDER);
+            cellImagen = new PdfPCell(image);
+            TablaLogo.addCell(cellImagen);
+            doc.add(TablaLogo);
+
+            PdfPTable TablaEncabezado = new PdfPTable(1);
+            String encabezado = "DISTRIBELLEZA\n Nit: 1022433741-1\nDireccion cll a#b 1-3\n"
+                    + "correo: algo@hotmail.com\n ----------------------------------------------";
+            Paragraph Titulo = new Paragraph(encabezado, FontFactory.getFont("arial", 12, java.awt.Font.PLAIN));
+            Titulo.setAlignment(Element.ALIGN_CENTER);
+            doc.add(Titulo);
+
+            PdfPCell celdaB = new PdfPCell();
+            celdaB.setBorder(Rectangle.NO_BORDER);
+            celdaB.setBackgroundColor(BaseColor.WHITE);
+            celdaB.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            celdaB.addElement(new Paragraph("Fecha: " + fechaactual(), FontFactory.getFont("arial", 14, java.awt.Font.PLAIN)));
+            TablaEncabezado.addCell(celdaB);
+            doc.add(TablaEncabezado);
+            doc.close();
+
+            JOptionPane.showMessageDialog(null, "Creado");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error" + e);
+        }
+
+    }//GEN-LAST:event_BtnAgregarActionPerformed
+
+    private void SpnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_SpnCantidadStateChanged
+        if (this.objVentas != null) {
+            this.updateValue(this.objVentas);
+        }
+    }//GEN-LAST:event_SpnCantidadStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregar;
     private javax.swing.JLabel LblIdFactura;
     private javax.swing.JSpinner SpnCantidad;
+    private javax.swing.JTable TablaVentas;
     private javax.swing.JTextField TxtProducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
+
+    private void addRows() {
+        this.saleList.forEach(venta -> {
+            this.modelo.addRow(new Object[]{
+                venta.getCodigo(),
+                venta.getNombre(),
+                venta.getCant(),
+                venta.getPrecio_unidad(),
+                venta.getTotal()});
+        });
+    }
+
+    private void search() {
+        try {
+//            System.out.println("Texto ");
+            this.objVentas = this.objDataProducto.vistaVenta(this.TxtProducto.getText());
+            this.objVentas.setCant((int) this.SpnCantidad.getValue());
+            this.saleList.add(this.objVentas);
+
+            this.addRows();
+        } catch (SQLException ex) {
+            Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void updateValue(AtributosVenta objAtribVent) {
+        int indice = this.saleList.indexOf(objAtribVent);
+        objAtribVent.setCant((int) this.SpnCantidad.getValue());
+        this.saleList.set(indice, objAtribVent);
+    }
 }
