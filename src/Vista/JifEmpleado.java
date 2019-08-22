@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  * @author MARCELO RUENES
  */
 public class JifEmpleado extends javax.swing.JInternalFrame {
-    
+
     private Excepciones objExcepciones;
     private DAO_Rol objDataRol;
     private DAO_Persona objDataPersona;
@@ -226,14 +226,15 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
             TimestampCertificates tc = new TimestampCertificates();
             if (this.objExcepciones.validarCamposPersona(TxtIdEmp, TxtNombreEmp, this.DchFechaNac, TxtTelEmp, TxtDirEmp)
                     && this.objExcepciones.validarCamposErrPersona(TxtIdEmp, TxtNombreEmp, this.DchFechaNac, TxtTelEmp, TxtDirEmp)) {
-                
+
                 if (this.TxtIdEmp.isEnabled()) {
                     if (this.objDataPersona.registrarNuevaPersona(new DTO_Persona(this.TxtIdEmp.getText(),
                             this.TxtNombreEmp.getText().toUpperCase(),
                             this.TxtTelEmp.getText(),
                             this.TxtDirEmp.getText(),
                             new Timestamp(new Date(), tc.getCertPath()),
-                            this.DchFechaNac.getDate()
+                            this.DchFechaNac.getDate(),
+                            true
                     ))) {
                         JOptionPane.showMessageDialog(this, "¡La persona " + this.TxtNombreEmp.getText().toUpperCase() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
                         this.cleanAllInputs();
@@ -259,12 +260,12 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
             }
         } catch (SQLException ex) {
             if (ex.getErrorCode() == 0) {
-                System.out.println("Persona: "+ex.getMessage());
+                System.out.println("Persona: " + ex.getMessage());
                 int res = JOptionPane.showConfirmDialog(this, "Esta persona ya se encuentra registrado\n"
                         + "¿Desea editarlo?", "Registro de persona", JOptionPane.ERROR_MESSAGE);
                 if (res == JOptionPane.YES_OPTION) {
                     try {
-                        this.fillData(this.objDataPersona.getSinglePersona(this.TxtIdEmp.getText()));
+                        this.fillData(this.objDataPersona.getSinglePersona(this.TxtIdEmp.getText(), true));
                     } catch (SQLException exSP) {
                         Logger.getLogger(JifEmpleado.class.getName()).log(Level.SEVERE, null, exSP);
                     }
@@ -298,13 +299,13 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
     private void TxtNombreEmpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtNombreEmpKeyReleased
         this.objExcepciones.validarExpresionTxt(this.TxtNombreEmp, "[a-zA-ZñÑ\\s]{2,40}");
     }//GEN-LAST:event_TxtNombreEmpKeyReleased
-    
+
     private DTO_Rol getRolById() throws SQLException {
         String item = this.Cbx_Rol.getSelectedItem().toString();
         int id_Rol = Integer.parseInt(item.split("-")[0]);
-        return this.objDataRol.getSingleRol(id_Rol);
+        return this.objDataRol.getSingleRol(id_Rol, true);
     }
-    
+
     private void cleanAllInputs() {
         this.TxtIdEmp.setText("");
         this.TxtIdEmp.setEnabled(true);
@@ -336,21 +337,21 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
         this.TxtIdEmp.setText(objPersona.getDNI());
         this.TxtNombreEmp.setText(objPersona.getNombre());
         //this.Cbx_Rol.setSelectedItem(objPersona.getRol().getId_Rol() + "- "
-          //      + objPersona.getRol().getNombre_Rol());
+        //      + objPersona.getRol().getNombre_Rol());
         this.TxtTelEmp.setText(objPersona.getTelefono());
         this.TxtDirEmp.setText(objPersona.getDireccion());
         this.DchFechaNac.setDate(objPersona.getFecha_Nacimiento());
         this.BtnAgregarEmpleado.setText("Modificar persona");
-        
+
     }
-    
+
     private void fillCbxRol() throws SQLException {
         this.objExcepciones = new Excepciones();
         this.objDataRol = new DAO_Rol();
         this.objDataPersona = new DAO_Persona();
-        this.objDataRol.getAllRoles().forEach(Rol -> {
+        this.objDataRol.getAllRoles(true).forEach(Rol -> {
             this.Cbx_Rol.addItem(Rol.getId_Rol() + "- " + Rol.getNombre_Rol());
         });
     }
-    
+
 }

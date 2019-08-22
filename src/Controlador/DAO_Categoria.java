@@ -45,9 +45,9 @@ public class DAO_Categoria {
         this.statement = conection.createStatement();
     }
 
-    public ArrayList<DTO_Categoria> getAllCategories() throws SQLException {
+    public ArrayList<DTO_Categoria> getAllCategories(boolean state) throws SQLException {
         this.lista_Categorias.clear();
-        String consulta = "SELECT * FROM CATEGORIA;";
+        String consulta = "SELECT * FROM CATEGORIA WHERE Activo = " + state + ";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.lista_Categorias.add(new DTO_Categoria(resultSet.getInt("Id_Categoria"),
@@ -56,10 +56,10 @@ public class DAO_Categoria {
         return this.lista_Categorias;
     }
 
-    public DTO_Categoria getSingleCategory(int id_categoria) throws SQLException {
+    public DTO_Categoria getSingleCategory(int id_categoria, boolean state) throws SQLException {
         this.objCategoria = null;
 
-        String consulta = "SELECT * FROM CATEGORIA WHERE Id_Categoria=" + id_categoria + ";";
+        String consulta = "SELECT * FROM CATEGORIA WHERE Id_Categoria=" + id_categoria + " AND Activo = " + state + ";";
         resultSet = statement.executeQuery(consulta);
         while (resultSet.next()) {
             this.objCategoria = new DTO_Categoria(
@@ -68,5 +68,30 @@ public class DAO_Categoria {
             );
         }
         return this.objCategoria;
+    }
+
+    public boolean addNewCategory(DTO_Categoria objNewCategoria) throws SQLException {
+        String insert = "INSERT INTO "
+                + "CATEGORIA (Nombre, Activo)"
+                + "VALUES ('" + objNewCategoria.getNombre() + "', "
+                + objNewCategoria.isActivo() + ");";
+        int res = statement.executeUpdate(insert);
+        return (res > 0);
+    }
+
+    public boolean modificarEstadoCategoria(int id_categoria, boolean state) throws SQLException {
+        String updateState = "UPDATE CATEGORIA "
+                + "SET Activo = " + state + " "
+                + "WHERE Id_Categoria = '" + id_categoria + "';";
+        int res = statement.executeUpdate(updateState);
+        return (res > 0);
+    }
+    
+    public boolean modificarCategoria(DTO_Categoria objCategoria) throws SQLException {
+        String update = "UPDATE CATEGORIA "
+                + "SET Nombre = '" + objCategoria.getNombre() + "' "
+                + "WHERE Id_Categoria = " + objCategoria.getId_Categoria() + ";";
+        int res = statement.executeUpdate(update);
+        return (res > 0);
     }
 }

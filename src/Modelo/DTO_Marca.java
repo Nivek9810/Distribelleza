@@ -14,9 +14,22 @@ public class DTO_Marca {
     private int Id_Marca;
     private DTO_Persona Proveedor;
     private String Nombre;
+    private boolean Activo;
 
     public DTO_Marca(int Id_Marca, DTO_Persona Proveedor, String Nombre) {
         this.Id_Marca = Id_Marca;
+        this.Proveedor = Proveedor;
+        this.Nombre = Nombre;
+    }
+
+    public DTO_Marca(int Id_Marca, DTO_Persona Proveedor, String Nombre, boolean Activo) {
+        this.Id_Marca = Id_Marca;
+        this.Proveedor = Proveedor;
+        this.Nombre = Nombre;
+        this.Activo = Activo;
+    }
+
+    public DTO_Marca(DTO_Persona Proveedor, String Nombre) {
         this.Proveedor = Proveedor;
         this.Nombre = Nombre;
     }
@@ -39,5 +52,16 @@ public class DTO_Marca {
         return Nombre;
     }
 
-    
+    public boolean isActivo() {
+        return Activo;
+    }
+
+    public void setNombre(String Nombre) {
+        this.Nombre = Nombre;
+    }
+
+    public void setProveedor(DTO_Persona Proveedor) {
+        this.Proveedor = Proveedor;
+    }
+
 }

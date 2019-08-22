@@ -82,7 +82,8 @@ public class DAO_Producto {
                 + objProducto.getPrecio_Compra() + ","
                 + objProducto.getCantidad() + ","
                 + objProducto.getPorcentaje_Venta() + ",'"
-                + objProducto.getFecha_de_Carga().getTimestamp() + "');";
+                + objProducto.getFecha_de_Carga().getTimestamp() + "',"
+                + objProducto.isActivo() + ");";
         int res = statement.executeUpdate(insertNewProduct);
         return (res > 0);
     }
@@ -101,17 +102,17 @@ public class DAO_Producto {
         return (cantResults > 0);
     }
 
-    public boolean eliminarProducto(String id_producto) throws SQLException {
+    public boolean modificarEstadoProducto(String id_producto, boolean state) throws SQLException {
         String updateProduct = "UPDATE PRODUCTO SET "
-                + "Estado = " + false + " "
-                + "WHERE Id_Producto = '" + objProducto.getId_Producto() + "';";
+                + "Activo = " + state + " "
+                + "WHERE Id_Producto = '" + id_producto + "';";
         int cantResults = statement.executeUpdate(updateProduct);
         return (cantResults > 0);
     }
 
-    public ArrayList<DTO_Producto> getAllProducts() throws SQLException {
+    public ArrayList<DTO_Producto> getAllProducts(boolean state) throws SQLException {
         this.lista_Productos.clear();
-        String query = "SELECT * FROM PRODUCTO;";
+        String query = "SELECT * FROM PRODUCTO WHERE Activo = " + state + ";";
         this.resultSet = this.statement.executeQuery(query);
         while (this.resultSet.next()) {
             /*
@@ -120,52 +121,55 @@ public class DAO_Producto {
              */
             this.lista_Productos.add(new DTO_Producto(
                     this.resultSet.getString("Id_Producto"),
-                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("Id_Marca")),
-                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("Id_Categoria")),
+                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("Id_Marca"), true),//state
+                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("Id_Categoria"), true),//state
                     this.resultSet.getString("Nombre"),
                     (double) this.resultSet.getInt("Precio_Compra"),
                     this.resultSet.getInt("Cantidad"),
                     this.resultSet.getDouble("Porcentaje_Venta"),
-                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha_de_Carga").getTime()), this.tc.getCertPath()))
+                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha_de_Carga").getTime()), this.tc.getCertPath()),
+                    this.resultSet.getBoolean("Activo"))
             );
         }
         return this.lista_Productos;
     }
 
-    public DTO_Producto getSingleProducto(String id) throws SQLException {
+    public DTO_Producto getSingleProducto(String id, boolean state) throws SQLException {
         this.objProducto = null;
-        String Consulta = "select * from PRODUCTO WHERE ID_PRODUCTO = '" + id + "';";
+        String Consulta = "SELECT * FROM PRODUCTO WHERE ID_PRODUCTO = '" + id + "' AND Activo = " + state + ";";
         this.resultSet = this.statement.executeQuery(Consulta);
         while (resultSet.next()) {
             this.objProducto = new DTO_Producto(
                     this.resultSet.getString("id_producto"),
-                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("id_marca")),
-                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("id_categoria")),
+                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("id_marca"), true),//state
+                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("id_categoria"), true),//state
                     this.resultSet.getString("nombre"),
                     (double) this.resultSet.getInt("precio_compra"),
                     this.resultSet.getInt("cantidad"),
                     this.resultSet.getDouble("porcentaje_venta"),
-                    new Timestamp(new Date(this.resultSet.getTimestamp("fecha_de_carga").getTime()), this.tc.getCertPath()));
+                    new Timestamp(new Date(this.resultSet.getTimestamp("fecha_de_carga").getTime()), this.tc.getCertPath()),
+                    this.resultSet.getBoolean("Activo"));
 
         }
         return this.objProducto;
     }
 
-    public ArrayList<DTO_Producto> getProductosByQuery(String nombre) throws SQLException {
+    public ArrayList<DTO_Producto> getProductosByQuery(String nombre, boolean state) throws SQLException {
         this.lista_Productos.clear();
         String query = "SELECT * FROM PRODUCTO "
-                + "WHERE Nombre LIKE '%" + nombre + "%';";
+                + "WHERE Nombre LIKE '%" + nombre + "%' AND Activo = " + state + ";";
         this.resultSet = this.statement.executeQuery(query);
         while (this.resultSet.next()) {
             this.lista_Productos.add(new DTO_Producto(
                     this.resultSet.getString("Id_Producto"),
-                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("Id_Marca")),
-                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("Id_Categoria")),
+                    this.objDataMarca.getSingleMarca(this.resultSet.getInt("Id_Marca"), true),//state
+                    this.objDataCategoria.getSingleCategory(this.resultSet.getInt("Id_Categoria"), true),//state
                     this.resultSet.getString("Nombre"),
                     (double) this.resultSet.getInt("Precio_Compra"),
                     this.resultSet.getInt("Cantidad"),
                     this.resultSet.getDouble("Porcentaje_Venta"),
-                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha_de_Carga").getTime()), this.tc.getCertPath()))
+                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha_de_Carga").getTime()), this.tc.getCertPath()),
+                    this.resultSet.getBoolean("Activo"))
             );
         }
         return this.lista_Productos;

@@ -105,8 +105,8 @@ public class Excepciones {
                 && Double.parseDouble(Spn_Cantidad.getValue().toString()) > 0
                 && Double.parseDouble(Spn_Porcentaje_Venta.getValue().toString()) > 0);
     }
-    
-    public boolean validarCamposPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp,JDateChooser TxtFechaNacEmp,JTextField TxtTelEmp, JTextField TxtDirEmp) {
+
+    public boolean validarCamposPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp, JDateChooser TxtFechaNacEmp, JTextField TxtTelEmp, JTextField TxtDirEmp) {
         return (!TxtIdEmp.getText().trim().equals("")
                 && !TxtNombreEmp.getText().trim().equals("")
                 && TxtFechaNacEmp.getDate() != null
@@ -135,15 +135,14 @@ public class Excepciones {
                 && !Spn_Cantidad.getForeground().equals(Color.red)
                 && !Spn_Porcentaje_Venta.getForeground().equals(Color.red));
     }
-    
-    public boolean validarCamposErrPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp,JDateChooser TxtFechaNacEmp,JTextField TxtTelEmp, JTextField TxtDirEmp) {
+
+    public boolean validarCamposErrPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp, JDateChooser TxtFechaNacEmp, JTextField TxtTelEmp, JTextField TxtDirEmp) {
         return (!TxtIdEmp.getForeground().equals(Color.red)
                 && !TxtNombreEmp.getForeground().equals(Color.red)
                 && !TxtFechaNacEmp.getForeground().equals(Color.red)
                 && !TxtTelEmp.getForeground().equals(Color.red)
                 && !TxtDirEmp.getForeground().equals(Color.red));
     }
-
 
     /**
      *
@@ -412,6 +411,16 @@ public class Excepciones {
             plantilla.removeRow(i);
             i -= 1;
         }
+    }
+
+    public void limpiarCbx(JComboBox cbx) {
+        for (int i = cbx.getItemCount() - 1; i >= 0; i--) {
+            cbx.removeItemAt(i);
+        }
+    }
+
+    public int getIdFromCbx(String item, String caracter) {
+        return Integer.parseInt(item.split(caracter)[0]);
     }
 
     /**

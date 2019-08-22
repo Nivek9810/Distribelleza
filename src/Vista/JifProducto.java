@@ -6,20 +6,30 @@
 package Vista;
 
 import Controlador.DAO_Categoria;
+import Controlador.DAO_Categoria_Marca;
 import Controlador.DAO_Marca;
+import Controlador.DAO_Persona;
 import Controlador.DAO_Producto;
 import Modelo.DTO_Categoria;
 import Modelo.DTO_Marca;
+import Modelo.DTO_Persona;
 import Modelo.DTO_Producto;
 import Modelo.Excepciones;
 import Modelo.TimestampCertificates;
+import java.awt.Color;
+import java.beans.PropertyVetoException;
 import java.security.Timestamp;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -32,12 +42,19 @@ public class JifProducto extends javax.swing.JInternalFrame {
      */
     private DAO_Categoria objDataCategoria;
     private DAO_Marca objDataMarca;
+    private DAO_Persona objDataProveedor;
     private DAO_Producto objDataProducto;
+    private DAO_Categoria_Marca objDataCategoria_Marca;
+    private DTO_Categoria objCategoria;
+    private DTO_Persona objProveedor;
+    private DTO_Marca objMarca;
     private Excepciones objExcepciones;
+    private DefaultTableModel tblCatModel;
+    private DefaultTableModel tblMarcModel;
+    private boolean current_state;
 
     public JifProducto() {
         initComponents();
-        this.objExcepciones = new Excepciones();
         try {
             setComponentsCofig();
         } catch (SQLException ex) {
@@ -47,7 +64,6 @@ public class JifProducto extends javax.swing.JInternalFrame {
 
     public JifProducto(String Titulo) {
         initComponents();
-        this.objExcepciones = new Excepciones();
         //System.out.println("Example: " + Tipo);
         this.lblTitulo.setText(Titulo);
 
@@ -60,13 +76,12 @@ public class JifProducto extends javax.swing.JInternalFrame {
 
     public JifProducto(DTO_Producto objProducto, String Titulo) {
         initComponents();
-        this.objExcepciones = new Excepciones();
         //System.out.println("Example: " + Tipo);
         this.lblTitulo.setText(Titulo);
 
         try {
             this.setComponentsCofig();
-            this.fillData(objProducto);
+            this.fillProductData(objProducto);
         } catch (SQLException ex) {
             System.out.println("Error en la Base de datos: " + ex.getMessage());
         }
@@ -92,7 +107,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         Cbx_Marca = new javax.swing.JComboBox<>();
-        Cbx_Categoría = new javax.swing.JComboBox<>();
+        Cbx_Cat = new javax.swing.JComboBox<>();
         Txt_Id_Prod = new javax.swing.JTextField();
         Txt_Nombre = new javax.swing.JTextField();
         Spn_Precio_Compra = new javax.swing.JSpinner();
@@ -103,18 +118,34 @@ public class JifProducto extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         Lbl_CatTitulo = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Tbl_Categoria = new javax.swing.JTable();
+        jPanel5 = new javax.swing.JPanel();
         Txt_Categoria = new javax.swing.JTextField();
-        Btn_Categoria = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        Btn_AddCategoria = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        Btn_EliminarCat = new javax.swing.JButton();
+        Btn_ModificarCat = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         Lbl_TituloMarca = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Tbl_Marca = new javax.swing.JTable();
+        jPanel8 = new javax.swing.JPanel();
+        Txt_Marca = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        Txt_Marca = new javax.swing.JTextField();
         Cbx_Proveedor = new javax.swing.JComboBox<>();
-        Cbx_Categoria = new javax.swing.JComboBox<>();
-        Btn_Marca = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        Cbx_MarcaCat = new javax.swing.JComboBox<>();
+        Btn_AddMarca = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        Btn_EliminarMarca = new javax.swing.JButton();
+        Btn_EditMarca = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        TBN_EstadoCat = new javax.swing.JToggleButton();
 
         setIconifiable(true);
         setMaximizable(true);
@@ -252,16 +283,16 @@ public class JifProducto extends javax.swing.JInternalFrame {
                                     .addComponent(jLabel6))
                                 .addGap(23, 23, 23)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Cbx_Categoría, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(Cbx_Cat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(Txt_Nombre)
                                     .addComponent(Spn_Precio_Compra)
                                     .addComponent(Spn_Porcentaje_Venta))))
                         .addGap(69, 69, 69)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
+                        .addGap(89, 89, 89)
                         .addComponent(btn_RegistrarProd)))
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addContainerGap(327, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,7 +310,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(Cbx_Categoría, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Cbx_Cat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -299,9 +330,9 @@ public class JifProducto extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(Spn_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_RegistrarProd)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(116, Short.MAX_VALUE))
         );
 
         JtpProducto.addTab("Producto", jPanel1);
@@ -310,36 +341,123 @@ public class JifProducto extends javax.swing.JInternalFrame {
 
         Lbl_CatTitulo.setText("Nueva categoria");
 
+        jScrollPane1.setViewportView(Tbl_Categoria);
+
+        jScrollPane2.setViewportView(jScrollPane1);
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Agregar Categoría"));
+
+        Txt_Categoria.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Txt_CategoriaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Txt_CategoriaKeyReleased(evt);
+            }
+        });
+
         jLabel8.setText("Nombre:");
 
-        Btn_Categoria.setText("Agregar");
+        Btn_AddCategoria.setText("Agregar");
+        Btn_AddCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_AddCategoriaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Btn_AddCategoria)
+                    .addComponent(Txt_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(Txt_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(Btn_AddCategoria)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Administrar Categoría"));
+
+        Btn_EliminarCat.setText("Eliminar");
+        Btn_EliminarCat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_EliminarCatActionPerformed(evt);
+            }
+        });
+
+        Btn_ModificarCat.setText("Modificar");
+        Btn_ModificarCat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_ModificarCatActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Btn_ModificarCat)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(Btn_EliminarCat)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Btn_EliminarCat)
+                    .addComponent(Btn_ModificarCat))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Lbl_CatTitulo)
-                    .addComponent(Btn_Categoria)
-                    .addComponent(Txt_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(563, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addComponent(Lbl_CatTitulo))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Lbl_CatTitulo)
-                .addGap(11, 11, 11)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(Txt_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Btn_Categoria)
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(Lbl_CatTitulo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         JtpProducto.addTab("Categorias", jPanel2);
@@ -348,70 +466,178 @@ public class JifProducto extends javax.swing.JInternalFrame {
 
         Lbl_TituloMarca.setText("Nueva marca");
 
-        jLabel10.setText("Nombre:");
+        jScrollPane3.setViewportView(Tbl_Marca);
 
-        jLabel11.setText("Proveedor");
+        jScrollPane4.setViewportView(jScrollPane3);
 
-        jLabel12.setText("Categoria");
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Agregar Marca"));
 
         Txt_Marca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Txt_MarcaActionPerformed(evt);
             }
         });
+        Txt_Marca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Txt_MarcaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                Txt_MarcaKeyReleased(evt);
+            }
+        });
 
-        Cbx_Proveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel10.setText("Nombre:");
 
-        Cbx_Categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel11.setText("Proveedor");
 
-        Btn_Marca.setText("Agregar");
+        jLabel12.setText("Categoria");
+
+        Btn_AddMarca.setText("Agregar");
+        Btn_AddMarca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_AddMarcaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Txt_Marca)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(Btn_AddMarca)
+                        .addGap(0, 68, Short.MAX_VALUE))
+                    .addComponent(Cbx_Proveedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Cbx_MarcaCat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(Txt_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(Cbx_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(Cbx_MarcaCat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(Btn_AddMarca)
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Administrar Marca"));
+
+        Btn_EliminarMarca.setText("Eliminar");
+        Btn_EliminarMarca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_EliminarMarcaActionPerformed(evt);
+            }
+        });
+
+        Btn_EditMarca.setText("Editar");
+        Btn_EditMarca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_EditMarcaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(Btn_EditMarca)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Btn_EliminarMarca)
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Btn_EliminarMarca)
+                    .addComponent(Btn_EditMarca))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel10))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Btn_Marca)
-                            .addComponent(Txt_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Cbx_Proveedor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Lbl_TituloMarca)))
+                        .addGap(92, 92, 92)
+                        .addComponent(Lbl_TituloMarca))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(Cbx_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(557, Short.MAX_VALUE))
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(287, 287, 287))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Lbl_TituloMarca)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(Txt_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(Cbx_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(Cbx_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(Lbl_TituloMarca)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(Btn_Marca)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JtpProducto.addTab("Marca", jPanel3);
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Estado"));
+
+        TBN_EstadoCat.setText("Cambiar estado");
+        TBN_EstadoCat.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                TBN_EstadoCatItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(TBN_EstadoCat)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(TBN_EstadoCat)
+                .addGap(0, 5, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -420,16 +646,21 @@ public class JifProducto extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitulo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addComponent(JtpProducto, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JtpProducto))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(JtpProducto)
+                .addContainerGap())
         );
 
         JtpProducto.getAccessibleContext().setAccessibleName("Producto");
@@ -442,7 +673,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_Txt_Id_ProdActionPerformed
 
     private void btn_RegistrarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RegistrarProdActionPerformed
-            try {
+        try {
             DAO_Producto objDataProducto = new DAO_Producto();
             TimestampCertificates tc = new TimestampCertificates();
             if (this.objExcepciones.validarCamposProducto(Txt_Id_Prod, Txt_Nombre, Spn_Precio_Compra, Spn_Cantidad, Spn_Porcentaje_Venta)
@@ -452,12 +683,13 @@ public class JifProducto extends javax.swing.JInternalFrame {
                     //@START: Nuevo Producto
                     if (objDataProducto.registrarNuevoProducto(new DTO_Producto(this.Txt_Id_Prod.getText(),
                             this.getMarcaById(),
-                            this.getCategoryById(),
+                            this.getCategoryById(this.Cbx_Cat),
                             this.Txt_Nombre.getText().toUpperCase(),
                             Double.parseDouble(this.Spn_Precio_Compra.getValue().toString()),
                             (int) this.Spn_Cantidad.getValue(),
                             Double.parseDouble(this.Spn_Porcentaje_Venta.getValue().toString()) / 100,
-                            new Timestamp(new Date(), tc.getCertPath())
+                            new Timestamp(new Date(), tc.getCertPath()),
+                            true
                     ))) {
                         JOptionPane.showMessageDialog(this, "¡El producto " + this.Txt_Nombre.getText().toUpperCase() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
                         this.cleanAllInputs();
@@ -469,7 +701,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
                     //@START: Editar Producto
                     if (objDataProducto.modificarProducto(new DTO_Producto(this.Txt_Id_Prod.getText(),
                             this.getMarcaById(),
-                            this.getCategoryById(),
+                            this.getCategoryById(this.Cbx_Cat),
                             this.Txt_Nombre.getText().toUpperCase(),
                             Double.parseDouble(this.Spn_Precio_Compra.getValue().toString()),
                             (int) this.Spn_Cantidad.getValue(),
@@ -493,7 +725,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
                         + "¿Desea editarlo?", "Registro de producto", JOptionPane.ERROR_MESSAGE);
                 if (res == JOptionPane.YES_OPTION) {
                     try {
-                        this.fillData(this.objDataProducto.getSingleProducto(this.Txt_Id_Prod.getText()));
+                        this.fillProductData(this.objDataProducto.getSingleProducto(this.Txt_Id_Prod.getText(), true));
                     } catch (SQLException exSP) {
                         Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, exSP);
                     }
@@ -549,19 +781,197 @@ public class JifProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_Txt_MarcaActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JifListar_Productos jifListar_Productos = new JifListar_Productos();
-        this.objExcepciones.controlaInstancia(jifListar_Productos, this.getDesktopPane());
-        jifListar_Productos.setVisible(true);
-        jifListar_Productos.setClosable(true);
+        try {
+
+            JifListar_Productos jifListar_Productos = new JifListar_Productos();
+            this.objExcepciones.controlaInstancia(jifListar_Productos, this.getDesktopPane());
+            jifListar_Productos.setVisible(true);
+            jifListar_Productos.setClosable(true);
+            this.setClosed(true);
+            this.setVisible(false);
+
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void Btn_AddCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_AddCategoriaActionPerformed
+        try {
+            if (!this.Txt_Categoria.getText().equals("") && !this.Txt_Categoria.getForeground().equals(Color.red)) {
+                if ((this.objCategoria == null) || this.Btn_AddCategoria.getText().equalsIgnoreCase("Agregar")) {
+                    if (this.objDataCategoria.addNewCategory(new DTO_Categoria(this.Txt_Categoria.getText().toUpperCase(), true))) {
+                        JOptionPane.showMessageDialog(this, "La categoria " + this.Txt_Categoria.getText() + " fue añadida correctamente.", "Agregar categroria", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    this.objCategoria.setNombre(this.Txt_Categoria.getText().toUpperCase());
+                    if (this.objDataCategoria.modificarCategoria(objCategoria)) {
+                        JOptionPane.showMessageDialog(this, "¡ Categoría modificada correctamente !.", "Modificar categoría", JOptionPane.INFORMATION_MESSAGE);
+                        this.Btn_AddCategoria.setText("Agregar");
+                    }
+                }
+                this.Txt_Categoria.setText("");
+                this.fillCategoriesAndMarcasList();
+            } else {
+                JOptionPane.showMessageDialog(this, "Lo siento, no es permitido dejar espacios en blanco o erroneos.", "Agregar categroria", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_Btn_AddCategoriaActionPerformed
+
+    private void Txt_CategoriaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_CategoriaKeyPressed
+        this.objExcepciones.validarLetra(evt);
+    }//GEN-LAST:event_Txt_CategoriaKeyPressed
+
+    private void Txt_CategoriaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_CategoriaKeyReleased
+        this.objExcepciones.validarExpresionTxt(this.Txt_Categoria, "[a-zA-ZñÑ\\s]{2,20}");
+    }//GEN-LAST:event_Txt_CategoriaKeyReleased
+
+    private void Btn_EliminarCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_EliminarCatActionPerformed
+        int fila_seleccionada = this.Tbl_Categoria.getSelectedRow();
+        if (fila_seleccionada >= 0) {
+            int resp = JOptionPane.showConfirmDialog(this,
+                    "¿Esta seguro de eliminar la categoría " + this.tblCatModel.getValueAt(fila_seleccionada, 1) + "\n"
+                    + "Recuerde que esta opción es ireversible.",
+                    "Eliminar categoria", JOptionPane.WARNING_MESSAGE);
+            if (resp == JOptionPane.YES_OPTION) {
+                try {
+                    if (this.objDataCategoria.modificarEstadoCategoria((int) this.tblCatModel.getValueAt(fila_seleccionada, 0), !this.current_state)) {
+                        JOptionPane.showMessageDialog(this, "¡ Categoría eliminada correctamente !.", "Eliminar categoria", JOptionPane.INFORMATION_MESSAGE);
+                        this.tblCatModel.removeRow(fila_seleccionada);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un elemento de la lista.", "¡Adventencia!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Btn_EliminarCatActionPerformed
+
+    private void Btn_ModificarCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_ModificarCatActionPerformed
+        int fila_seleccionada = this.Tbl_Categoria.getSelectedRow();
+
+        if (fila_seleccionada >= 0) {
+
+            try {
+                this.objCategoria = this.objDataCategoria.getSingleCategory((int) this.tblCatModel.getValueAt(fila_seleccionada, 0), this.current_state);
+                this.Txt_Categoria.setText(objCategoria.getNombre());
+                this.Btn_AddCategoria.setText("Modificar");
+            } catch (SQLException ex) {
+                Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un elemento de la lista.", "¡Adventencia!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Btn_ModificarCatActionPerformed
+
+    private void TBN_EstadoCatItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_TBN_EstadoCatItemStateChanged
+        if (this.TBN_EstadoCat.isSelected()) {
+            this.TBN_EstadoCat.setText("Inactivos");
+            this.Btn_EliminarCat.setText("Reestablecer");
+            this.Btn_EliminarMarca.setText("Reestablecer");
+            this.current_state = false;
+        } else {
+            this.TBN_EstadoCat.setText("Activos");
+            this.Btn_EliminarCat.setText("Eliminar");
+            this.Btn_EliminarMarca.setText("Eliminar");
+            this.current_state = true;
+        }
+        this.fillCategoriesAndMarcasList();
+    }//GEN-LAST:event_TBN_EstadoCatItemStateChanged
+
+    private void Btn_EditMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_EditMarcaActionPerformed
+        int fila_seleccionada = this.Tbl_Marca.getSelectedRow();
+
+        if (fila_seleccionada >= 0) {
+
+            try {
+                this.objMarca = this.objDataMarca.getSingleMarca((int) this.tblMarcModel.getValueAt(fila_seleccionada, 0), this.current_state);
+                this.fillMarcasData(objMarca);
+                this.Cbx_MarcaCat.setEnabled(false);
+                this.Btn_AddMarca.setText("Modificar");
+            } catch (SQLException ex) {
+                Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un elemento de la lista.", "¡Adventencia!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Btn_EditMarcaActionPerformed
+
+    private void Btn_AddMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_AddMarcaActionPerformed
+        try {
+            if (!this.Txt_Marca.getText().trim().equals("") && !this.Txt_Marca.getForeground().equals(Color.red)) {
+                if ((this.objMarca == null) || this.Btn_AddMarca.getText().equalsIgnoreCase("Agregar")) {
+                    if (this.objDataCategoria_Marca.addNewCategoria_Marca(this.getCategoryById(this.Cbx_MarcaCat),
+                            this.objDataMarca.addNewMarca(new DTO_Marca(this.getProveedorById(), this.Txt_Marca.getText().toUpperCase())))) {
+                        JOptionPane.showMessageDialog(this, "La marca " + this.Txt_Marca.getText() + " fue añadida correctamente.", "Agregar marca", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    //this.fillMarcasData(objMarca);
+                    this.objMarca.setNombre(this.Txt_Marca.getText().toUpperCase());
+                    this.objMarca.setProveedor(this.getProveedorById());
+                    if (this.objDataMarca.modificarMarca(objMarca)) {
+                        JOptionPane.showMessageDialog(this, "¡ Marca modificada correctamente !.", "Modificar marca", JOptionPane.INFORMATION_MESSAGE);
+                        this.Btn_AddCategoria.setText("Agregar");
+                        this.Cbx_MarcaCat.setEnabled(true);
+                    }
+                }
+                this.Txt_Marca.setText("");
+                this.fillCategoriesAndMarcasList();
+            } else {
+                JOptionPane.showMessageDialog(this, "Lo siento, no es permitido dejar espacios en blanco o erroneos.", "Agregar marca", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_Btn_AddMarcaActionPerformed
+
+    private void Txt_MarcaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_MarcaKeyPressed
+        this.objExcepciones.validarLetra(evt);
+    }//GEN-LAST:event_Txt_MarcaKeyPressed
+
+    private void Txt_MarcaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Txt_MarcaKeyReleased
+        this.objExcepciones.validarExpresionTxt(this.Txt_Marca, "[a-zA-ZñÑ\\s]{3,35}");
+    }//GEN-LAST:event_Txt_MarcaKeyReleased
+
+    private void Btn_EliminarMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_EliminarMarcaActionPerformed
+        int fila_seleccionada = this.Tbl_Marca.getSelectedRow();
+        if (fila_seleccionada >= 0) {
+            int resp = JOptionPane.showConfirmDialog(this,
+                    "¿Esta seguro de eliminar la marca " + this.tblMarcModel.getValueAt(fila_seleccionada, 1) + "\n"
+                    + "Recuerde que esta opción es ireversible.",
+                    "Eliminar marca", JOptionPane.WARNING_MESSAGE);
+            if (resp == JOptionPane.YES_OPTION) {
+                try {
+                    if (this.objDataMarca.modificarEstadoMarca((int) this.tblMarcModel.getValueAt(fila_seleccionada, 0), !this.current_state)) {
+                        JOptionPane.showMessageDialog(this, "¡ Marca eliminada correctamente !.", "Eliminar marca", JOptionPane.INFORMATION_MESSAGE);
+                        this.tblMarcModel.removeRow(fila_seleccionada);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(JifProducto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un elemento de la lista.", "¡Adventencia!", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Btn_EliminarMarcaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Btn_Categoria;
-    private javax.swing.JButton Btn_Marca;
-    private javax.swing.JComboBox<String> Cbx_Categoria;
-    private javax.swing.JComboBox<String> Cbx_Categoría;
+    private javax.swing.JButton Btn_AddCategoria;
+    private javax.swing.JButton Btn_AddMarca;
+    private javax.swing.JButton Btn_EditMarca;
+    private javax.swing.JButton Btn_EliminarCat;
+    private javax.swing.JButton Btn_EliminarMarca;
+    private javax.swing.JButton Btn_ModificarCat;
+    private javax.swing.JComboBox<String> Cbx_Cat;
     private javax.swing.JComboBox<String> Cbx_Marca;
+    private javax.swing.JComboBox<String> Cbx_MarcaCat;
     private javax.swing.JComboBox<String> Cbx_Proveedor;
     private javax.swing.JTabbedPane JtpProducto;
     private javax.swing.JLabel Lbl_CatTitulo;
@@ -569,6 +979,9 @@ public class JifProducto extends javax.swing.JInternalFrame {
     private javax.swing.JSpinner Spn_Cantidad;
     private javax.swing.JSpinner Spn_Porcentaje_Venta;
     private javax.swing.JSpinner Spn_Precio_Compra;
+    private javax.swing.JToggleButton TBN_EstadoCat;
+    private javax.swing.JTable Tbl_Categoria;
+    private javax.swing.JTable Tbl_Marca;
     private javax.swing.JTextField Txt_Categoria;
     private javax.swing.JTextField Txt_Id_Prod;
     private javax.swing.JTextField Txt_Marca;
@@ -590,42 +1003,75 @@ public class JifProducto extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 
     private void setComponentsCofig() throws SQLException {
+        this.objExcepciones = new Excepciones();
         this.objDataCategoria = new DAO_Categoria();
         this.objDataMarca = new DAO_Marca();
         this.objDataProducto = new DAO_Producto();
+        this.objDataProveedor = new DAO_Persona();
+        this.objDataCategoria_Marca = new DAO_Categoria_Marca();
+        this.objProveedor = new DTO_Persona();
+        this.objMarca = null;
+        this.objCategoria = null;
         this.Spn_Precio_Compra.setModel(new SpinnerNumberModel(0, 0, 1000000, 1));
         this.Spn_Porcentaje_Venta.setModel(new SpinnerNumberModel(0, 0, 100, 1));
         this.Spn_Cantidad.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
+        this.current_state = true;
 
-        try {
+        this.tblCatModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
 
-            this.objDataCategoria.getAllCategories().
-                    forEach(category
-                            -> this.Cbx_Categoría.addItem(category.getId_Categoria() + "- " + category.getNombre()));
+        this.tblMarcModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
 
-            objDataMarca.getAllMarcas().
-                    forEach(marca
-                            -> this.Cbx_Marca.addItem(marca.getId_Marca() + "- " + marca.getNombre() + " de " + marca.getProveedor().getNombre()));
+        this.tblCatModel.addColumn("Cod. Categoría");
+        this.tblCatModel.addColumn("Nombre");
+        this.Tbl_Categoria.setModel(tblCatModel);
 
-        } catch (SQLException ex) {
-            System.out.println("Error en la Base de datos: " + ex.getMessage());
-        }
+        this.tblMarcModel.addColumn("Cod. Marca");
+        this.tblMarcModel.addColumn("Nombre");
+        this.tblMarcModel.addColumn("Proveedor");
+        this.Tbl_Marca.setModel(tblMarcModel);
+
+        this.fillCategoriesAndMarcasList();
     }
 
-    private DTO_Categoria getCategoryById() throws SQLException {
-        String item = this.Cbx_Categoría.getSelectedItem().toString();
+    private DTO_Categoria getCategoryById(JComboBox Cbx) throws SQLException {
+        String item = Cbx.getSelectedItem().toString();
         int id_category = Integer.parseInt(item.split("-")[0]);
-        return this.objDataCategoria.getSingleCategory(id_category);
+        return this.objDataCategoria.getSingleCategory(id_category, true);
     }
 
     private DTO_Marca getMarcaById() throws SQLException {
         String item = this.Cbx_Marca.getSelectedItem().toString();
         int id_marca = Integer.parseInt(item.split("-")[0]);
-        return this.objDataMarca.getSingleMarca(id_marca);
+        return this.objDataMarca.getSingleMarca(id_marca, true);
+    }
+
+    private DTO_Persona getProveedorById() throws SQLException {
+        String item = this.Cbx_Proveedor.getSelectedItem().toString();
+        String id_persona = item.split("-")[0];
+        return this.objDataProveedor.getSinglePersona(id_persona, true);
     }
 
     private void cleanAllInputs() {
@@ -637,7 +1083,7 @@ public class JifProducto extends javax.swing.JInternalFrame {
         this.Spn_Cantidad.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
     }
 
-    private void fillData(DTO_Producto objProducto) {
+    private void fillProductData(DTO_Producto objProducto) {
         this.Txt_Id_Prod.setText(objProducto.getId_Producto());
         this.Cbx_Marca.setSelectedItem(objProducto.getMarca().getId_Marca() + "- "
                 + objProducto.getMarca().getNombre() + " de "
@@ -651,4 +1097,58 @@ public class JifProducto extends javax.swing.JInternalFrame {
         this.btn_RegistrarProd.setText("Modificar producto");
         this.Txt_Id_Prod.setEnabled(false);
     }
+
+    private void fillMarcasData(DTO_Marca objMarca) {
+        this.Txt_Marca.setText(objMarca.getNombre());
+        //proveedor.getDNI() + "- " + proveedor.getNombre()
+        this.Cbx_Proveedor.setSelectedItem(objMarca.getProveedor().getDNI() + "- " + objMarca.getProveedor().getNombre());
+        //category.getId_Categoria() + "- " + category.getNombre()
+        //this.Cbx_MarcaCat.setSelectedItem(objMarca);
+    }
+
+    private void fillCategoriesAndMarcasList() {
+        this.objExcepciones.limpiarTabla(this.Tbl_Categoria, this.tblCatModel);
+
+        this.objExcepciones.limpiarTabla(this.Tbl_Marca, this.tblMarcModel);
+
+        this.Cbx_Marca.removeAllItems();
+        this.Cbx_Cat.removeAllItems();
+
+        this.Cbx_Proveedor.removeAllItems();
+        this.Cbx_MarcaCat.removeAllItems();
+
+        try {
+            this.objDataCategoria.getAllCategories(current_state).
+                    forEach(category
+                            -> {
+                        this.Cbx_Cat.addItem(category.getId_Categoria() + "- " + category.getNombre());
+                        this.Cbx_MarcaCat.addItem(category.getId_Categoria() + "- " + category.getNombre());
+                        this.tblCatModel.addRow(new Object[]{
+                            category.getId_Categoria(),
+                            category.getNombre()
+                        });
+                    });
+
+            this.objDataMarca.getAllMarcas(current_state).
+                    forEach(marca
+                            -> {
+                        this.Cbx_Marca.addItem(marca.getId_Marca() + "- " + marca.getNombre() + " de " + marca.getProveedor().getNombre());
+                        this.tblMarcModel.addRow(new Object[]{
+                            marca.getId_Marca(),
+                            marca.getNombre(),
+                            marca.getProveedor().getNombre()
+                        });
+                    }
+                    );
+
+            this.objDataProveedor.getAllProveedores(this.current_state).
+                    forEach(proveedor -> {
+                        this.Cbx_Proveedor.addItem(proveedor.getDNI() + "- " + proveedor.getNombre());
+                    });
+
+        } catch (SQLException ex) {
+            System.out.println("Error en la Base de datos: " + ex.getMessage());
+        }
+    }
+
 }

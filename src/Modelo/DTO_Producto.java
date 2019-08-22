@@ -21,6 +21,7 @@ public class DTO_Producto {
     private int Cantidad;
     private double Porcentaje_Venta;
     private Timestamp Fecha_de_Carga;
+    private boolean Activo;
 
     public DTO_Producto() {
         this.Id_Producto = "";
@@ -31,6 +32,19 @@ public class DTO_Producto {
         this.Cantidad = 0;
         this.Porcentaje_Venta = 0;
         this.Fecha_de_Carga = null;
+        this.Activo = false;
+    }
+
+    public DTO_Producto(String Id_Producto, DTO_Marca Marca, DTO_Categoria Categoria, String Nombre, double Precio_Compra, int Cantidad, double Porcentaje_Venta, Timestamp Fecha_de_Carga, boolean Activo) {
+        this.Id_Producto = Id_Producto;
+        this.Marca = Marca;
+        this.Categoria = Categoria;
+        this.Nombre = Nombre;
+        this.Precio_Compra = Precio_Compra;
+        this.Cantidad = Cantidad;
+        this.Porcentaje_Venta = Porcentaje_Venta;
+        this.Fecha_de_Carga = Fecha_de_Carga;
+        this.Activo = Activo;
     }
 
     public DTO_Producto(String Id_Producto, DTO_Marca Marca, DTO_Categoria Categoria, String Nombre, double Precio_Compra, int Cantidad, double Porcentaje_Venta, Timestamp Fecha_de_Carga) {
@@ -76,5 +90,7 @@ public class DTO_Producto {
         return Fecha_de_Carga;
     }
 
-    
+    public boolean isActivo() {
+        return Activo;
+    }
 }
