@@ -51,6 +51,7 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         modelo.addColumn("Categoría");
         modelo.addColumn("Precio de compra");
         modelo.addColumn("Cantidad");
+        
         modelo.addColumn("% de venta");
         modelo.addColumn("Fecha de carga");
         try {
@@ -139,6 +140,11 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         btnEstado.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 btnEstadoItemStateChanged(evt);
+            }
+        });
+        btnEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEstadoActionPerformed(evt);
             }
         });
 
@@ -277,6 +283,10 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         }
         this.search();
     }//GEN-LAST:event_btnEstadoItemStateChanged
+
+    private void btnEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEstadoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

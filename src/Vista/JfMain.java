@@ -8,6 +8,7 @@ package Vista;
 
 import Modelo.Excepciones;
 import java.io.IOException;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,6 +22,7 @@ public class JfMain extends javax.swing.JFrame {
     private JifProducto objJifProducto;
     private JifFactura objJifFactura;
     private JifListar_Productos obJifListar_Productos;
+    private JifListar_Facturas obJifListar_Facturas;
     private JifEmpleado obJifEmpleado;
     private JifLogin objJifLogin;
     private JifCierre objJifCierre;
@@ -60,7 +62,7 @@ public class JfMain extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuVerFact = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
         ItemAgregEmp = new javax.swing.JMenuItem();
@@ -109,6 +111,11 @@ public class JfMain extends javax.swing.JFrame {
 
         jMIVerProducto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jMIVerProducto.setText("Ver Producto");
+        jMIVerProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIVerProductoActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMIVerProducto);
 
         MBR_Opciones.add(jMenu1);
@@ -130,8 +137,14 @@ public class JfMain extends javax.swing.JFrame {
 
         jMenu5.setText("Consultar");
 
-        jMenuItem2.setText("Ver Facturas");
-        jMenu5.add(jMenuItem2);
+        jMenuVerFact.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuVerFact.setText("Ver Facturas");
+        jMenuVerFact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuVerFactActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuVerFact);
 
         jMenu3.add(jMenu5);
 
@@ -225,6 +238,18 @@ public class JfMain extends javax.swing.JFrame {
         this.objJifCierre.setClosable(true);
     }//GEN-LAST:event_jMIGenerarCierreActionPerformed
 
+    private void jMenuVerFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuVerFactActionPerformed
+        this.obJifListar_Facturas = new JifListar_Facturas();
+        this.objExcepciones.controlaInstancia(this.obJifListar_Facturas,this.jdpEscritorio);
+        /*this.objExcepciones.controlaInstancia(this.obJifListar_Facturas,this.jdpEscritorio);
+        this.obJifListar_Facturas.setVisible(true);
+        this.obJifListar_Facturas.setClosable(true);*/
+    }//GEN-LAST:event_jMenuVerFactActionPerformed
+
+    private void jMIVerProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIVerProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMIVerProductoActionPerformed
+
     public void confGen(String Titulo) throws IOException {
         objJifProducto = new JifProducto(Titulo);
         objExcepciones.controlaInstancia(objJifProducto, this.jdpEscritorio);
@@ -299,7 +324,7 @@ public class JfMain extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuVerFact;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JDesktopPane jdpEscritorio;
