@@ -62,7 +62,7 @@ public class DAO_Factura {
     public boolean RegistrarVenta(DTO_Factura obj_factura) throws SQLException {
         String insertNewSale = "INSERT INTO"
                 +" FACTURA "
-                + "VALUES ('" + obj_factura.getId_Factura() + "', ' "
+                + "VALUES ('" + obj_factura.getId_Factura() + "', '"
                 + obj_factura.getPersona().getDNI() + "', ' "
                 + obj_factura.getFecha().getTimestamp() + "', '"
                 + obj_factura.getCorreo() + "', "
