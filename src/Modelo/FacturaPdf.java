@@ -17,6 +17,7 @@ import com.itextpdf.text.Rectangle;
 //librerias ajenas a itext
 import javax.swing.JFileChooser;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Image;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.IOException;
@@ -84,17 +85,24 @@ public class FacturaPdf {
 
                 PdfPTable TablaEncabezado = new PdfPTable(1);
                 String encabezado = "DISTRIBELLEZA\n Nit: 1022433741-1\nDireccion cll a#b 1-3\n"
-                        + "correo: algo@hotmail.com\n ----------------------------------";
+                        + "correo: algo@hotmail.com\n ----------------------------------------\n";
                 Paragraph Titulo = new Paragraph(encabezado, FontFactory.getFont("arial", 12, java.awt.Font.PLAIN));
+                Barcode39 codigoBarras = new Barcode39();
+                codigoBarras.setCode(idFactura());
                 Titulo.setAlignment(Element.ALIGN_CENTER);
                 doc.add(Titulo);
+                
+                Image codimagen= codigoBarras.createImageWithBarcode(pw.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
+                codimagen.setAlignment(Element.ALIGN_CENTER);
+                doc.add(codimagen);
 
                 PdfPCell celdaB = new PdfPCell();
                 celdaB.setBorder(com.itextpdf.text.Rectangle.NO_BORDER);
                 celdaB.setBackgroundColor(BaseColor.WHITE);
                 celdaB.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                celdaB.addElement(new Paragraph("Fecha: " + fechaactual(), FontFactory.getFont("arial", 14, java.awt.Font.PLAIN)));
-                celdaB.addElement(new Paragraph("ID: " + idFactura(), FontFactory.getFont("arial", 14, java.awt.Font.PLAIN)));
+                celdaB.addElement(new Paragraph("Fecha: " + fechaactual()+"\n\n", FontFactory.getFont("arial", 12, java.awt.Font.PLAIN)));
+                //celdaB.addElement(new Paragraph("Factura N°: " + idFactura(), FontFactory.getFont("arial", 14, java.awt.Font.PLAIN)));
+                
                 TablaEncabezado.addCell(celdaB);
                 doc.add(TablaEncabezado);
 

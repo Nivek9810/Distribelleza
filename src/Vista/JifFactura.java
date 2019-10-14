@@ -95,24 +95,25 @@ public class JifFactura extends javax.swing.JInternalFrame {
 
         this.TablaVentas.setModel(modelo);
         Datos = "";
-        this.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ADD) {
-                    SpnCantidad.setValue((int) SpnCantidad.getValue() + 1);
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
+//        this.addKeyListener(new KeyListener() {
+//            @Override
+//            public void keyTyped(KeyEvent e) {
+//
+//            }
+//
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//                if (e.getKeyCode() == KeyEvent.VK_ADD) {
+//                    SpnCantidad.setValue((int) SpnCantidad.getValue() + 1);
+//                }
+//            }
+//            
+//
+//            @Override
+//            public void keyReleased(KeyEvent e) {
+//
+//            }
+//        });
     }
 
     public JifFactura(String titulo) {
@@ -179,6 +180,9 @@ public class JifFactura extends javax.swing.JInternalFrame {
         TxtProducto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TxtProductoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TxtProductoKeyReleased(evt);
             }
         });
 
@@ -249,7 +253,7 @@ public class JifFactura extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(lblTitulo)
-                .addGap(228, 617, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,7 +271,7 @@ public class JifFactura extends javax.swing.JInternalFrame {
                     .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnAgregar))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         pack();
@@ -275,13 +279,32 @@ public class JifFactura extends javax.swing.JInternalFrame {
 
     private void TxtProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtProductoActionPerformed
         try {
+            //TxtTotalCompra.setText("");
             TablaVentas.getSelectionModel().clearSelection();
+            DefaultTableModel modelo = new DefaultTableModel();
+            boolean ban;
+            for (int i = 0; i < TablaVentas.getRowCount(); i++) {
+                if ((TablaVentas.getValueAt(i, 0).toString()).equals(TxtProducto.getText())) {
+                    int cant = Integer.parseInt(TablaVentas.getValueAt(i, 2).toString()) + 1;
+                    //TablaVentas.setValueAt(title, i, 2)=cant;
+                    this.SpnCantidad.setValue(cant);
+                    // int filaSelect = TablaVentas.getSelectedRow();
+                    //DefaultTableModel dtm = (DefaultTableModel) TablaVentas.getModel(); 
+                    //modelo.setValueAt(i, 2, cant);
+                    TablaVentas.getSelectionModel().addSelectionInterval(i, i);
+                    this.modelo.removeRow(TablaVentas.getSelectedRow());
+                    //TablaVentas.remove(filaSelect);    
+//                    modelo=(DefaultTableModel) TablaVentas.getModel();
+//                    int fila=(int)modelo.getValueAt(filaSelect, i);
+//                    modelo.removeRow(fila);
+
+                }
+            }
             this.search();
             this.TxtProducto.setText("");
-            int filaSelect = TablaVentas.getSelectedRow();
+            //int filaSelect = TablaVentas.getSelectedRow();
             TablaVentas.getSelectionModel().addSelectionInterval(TablaVentas.getRowCount() - 1, TablaVentas.getRowCount() - 1);
-            TxtTotalCompra.setText("");
-            //TotalVenta();
+            TotalVenta();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Este producto no se encuentra registrado");
             this.TxtProducto.setText("");
@@ -307,11 +330,13 @@ public class JifFactura extends javax.swing.JInternalFrame {
         }
     }
 
-    double Total = 0;
+    double Total;
 
     public void TotalVenta() {
 
         if (TablaVentas.getRowCount() > 0) {
+
+            Total = 0;
 
             double posicion = 0;
             for (int i = 0; i < TablaVentas.getRowCount(); i++) {
@@ -337,8 +362,8 @@ public class JifFactura extends javax.swing.JInternalFrame {
 
     private void TxtProductoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtProductoKeyPressed
         eventos(evt);
-        //TotalVenta();
-        
+        TotalVenta();
+
     }//GEN-LAST:event_TxtProductoKeyPressed
 
     private DTO_Persona getPersonaById() throws SQLException {
@@ -350,35 +375,35 @@ public class JifFactura extends javax.swing.JInternalFrame {
         factura.crear_PDF(Total, TablaVentas);
         try {
             //DAO_Factura objFactura = new DAO_Factura();
-            FacturaPdf objfactpdf =new FacturaPdf();
+            FacturaPdf objfactpdf = new FacturaPdf();
             if (this.objExcepciones.validarCamposFactura(objfactpdf.idFactura(), "1123456789", objfactpdf.fechaactual(), "correo x", TxtTotalCompra)
                     && this.objExcepciones.validarCamposErrFactura(objfactpdf.idFactura(), "1123456789", objfactpdf.fechaactual(), "correo x", TxtTotalCompra)) {
 
-                    //@START: Nuevo Producto
-                    if (objDataFactura.RegistrarVenta(new DTO_Factura(objfactpdf.idFactura(),
-                            this.objDataPersona.getSinglePersona("1123456789", true),
-                            new Timestamp(new Date(), this.tc.getCertPath()),
-                            "correo x",
-                            Double.parseDouble(this.TxtTotalCompra.getText())
-                    ))) {
-                        JOptionPane.showMessageDialog(this, "¡El producto " + objfactpdf.idFactura() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
-                        
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Algo salió mal", "Registro de producto", JOptionPane.ERROR_MESSAGE);
-                    }
-                    //@END: Nuevo Producto                
+                //@START: Nuevo Producto
+                if (objDataFactura.RegistrarVenta(new DTO_Factura(objfactpdf.idFactura(),
+                        this.objDataPersona.getSinglePersona("1123456789", true),
+                        new Timestamp(new Date(), this.tc.getCertPath()),
+                        "correo x",
+                        Double.parseDouble(this.TxtTotalCompra.getText())
+                ))) {
+                    JOptionPane.showMessageDialog(this, "¡El producto " + objfactpdf.idFactura() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Algo salió mal", "Registro de producto", JOptionPane.ERROR_MESSAGE);
+                }
+                //@END: Nuevo Producto                
 
             } else {
                 JOptionPane.showMessageDialog(this, "No puede dejar campos vacios o erroneos", "Registro de producto", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException ex){
+        } catch (SQLException ex) {
             Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_BtnAgregarActionPerformed
 
     private void SpnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_SpnCantidadStateChanged
         ModificarPorSpinner();
-       TotalVenta();
+        //TotalVenta();
     }//GEN-LAST:event_SpnCantidadStateChanged
 
     private void SpnCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SpnCantidadKeyPressed
@@ -392,12 +417,16 @@ public class JifFactura extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_TablaVentasMouseClicked
 
     private void SpnCantidadMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SpnCantidadMouseClicked
-       // TotalVenta();
+        // TotalVenta();
     }//GEN-LAST:event_SpnCantidadMouseClicked
 
     private void TxtTotalCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtTotalCompraActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtTotalCompraActionPerformed
+
+    private void TxtProductoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtProductoKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtProductoKeyReleased
 
     FacturaPdf factura = new FacturaPdf();
 
