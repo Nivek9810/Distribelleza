@@ -6,6 +6,7 @@
 package Modelo;
 
 import java.security.Timestamp;
+import java.util.Date;
 
 /**
  *
@@ -13,16 +14,26 @@ import java.security.Timestamp;
  */
 public class DTO_Cierre {
 
-    private Timestamp Fecha;
+    private Date Fecha;
     private double Total_Venta;
     private DTO_Producto Producto_Mas_Vendido;
     private String Tipo;
+    private int cant_prod_vend;
 
-    public DTO_Cierre(Timestamp Fecha, double Total_Venta, DTO_Producto Producto_Mas_Vendido, String Tipo) {
+    public DTO_Cierre(Date Fecha, DTO_Producto Producto_Mas_Vendido, int cant_prod_vend) {
+        this.Fecha = Fecha;
+        this.Total_Venta = 0;
+        this.Producto_Mas_Vendido = Producto_Mas_Vendido;
+        this.Tipo = "";
+        this.cant_prod_vend = cant_prod_vend;
+    }
+
+    public DTO_Cierre(Date Fecha, double Total_Venta, DTO_Producto Producto_Mas_Vendido, String Tipo) {
         this.Fecha = Fecha;
         this.Total_Venta = Total_Venta;
         this.Producto_Mas_Vendido = Producto_Mas_Vendido;
         this.Tipo = Tipo;
+        this.cant_prod_vend = 0;
     }
 
     public DTO_Cierre() {
@@ -30,9 +41,10 @@ public class DTO_Cierre {
         this.Total_Venta = 0;
         this.Producto_Mas_Vendido = new DTO_Producto();
         this.Tipo = "";
+        this.cant_prod_vend = 0;
     }
 
-    public Timestamp getFecha() {
+    public Date getFecha() {
         return Fecha;
     }
 
@@ -46,6 +58,10 @@ public class DTO_Cierre {
 
     public String getTipo() {
         return Tipo;
+    }
+
+    public int getCant_prod_vend() {
+        return cant_prod_vend;
     }
 
 }

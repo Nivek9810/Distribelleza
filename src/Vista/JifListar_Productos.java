@@ -7,7 +7,7 @@ package Vista;
 
 import Controlador.DAO_Producto;
 import Modelo.DTO_Producto;
-import Modelo.Excepciones;
+import Tools.Excepciones;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.util.ArrayList;

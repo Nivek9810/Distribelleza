@@ -10,12 +10,13 @@ import Controlador.DAO_Persona_Rol;
 import Controlador.DAO_Rol;
 import Modelo.DTO_Persona_Rol;
 import Modelo.DTO_Rol;
-import Modelo.Excepciones;
+import Tools.Excepciones;
 import java.awt.Color;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,14 +32,17 @@ public class JifLogin extends javax.swing.JInternalFrame {
     private DAO_Persona_Rol objDataPersonaRol;
     private Excepciones objExcepciones;
     private DTO_Persona_Rol objPersona_Rol;
+    private JifChangePassword jifChangePassword;
+    private JDesktopPane objDesktopPane;
 
     public DTO_Persona_Rol getObjPersona_Rol() {
         return objPersona_Rol;
     }
 
-    public JifLogin() {
+    public JifLogin(JDesktopPane objDesktopPane, JfMain objMain) {
         try {
             initComponents();
+            this.objDesktopPane = objDesktopPane;
             this.objExcepciones = new Excepciones();
             this.objDataPersonaRol = new DAO_Persona_Rol();
             this.objDataRol = new DAO_Rol();
@@ -232,6 +236,14 @@ public class JifLogin extends javax.swing.JInternalFrame {
                             "Bienvenido Sr(a) " + this.objPersona_Rol.getPersona().getNombre() + ".",
                             "Inicio exitoso",
                             JOptionPane.INFORMATION_MESSAGE);
+                    //System.out.println("Last Log Login "+this.objPersona_Rol);
+                    if (this.objPersona_Rol.getCreateat() == null) {
+                        this.jifChangePassword = new JifChangePassword(this.objPersona_Rol.getContrasena(),
+                                this.objPersona_Rol.getPersona().getDNI(), this.objPersona_Rol.getRol().getId_Rol());
+                        this.objExcepciones.controlaInstancia(this.jifChangePassword, this.objDesktopPane);
+                        this.jifChangePassword.setVisible(true);
+                    }
+                    //System.out.println("CreatedAt: " + this.objPersona_Rol.getCreateat() + " and LastLog: " + );
                 }
             }
         } catch (SQLException | PropertyVetoException ex) {

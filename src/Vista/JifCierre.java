@@ -5,17 +5,45 @@
  */
 package Vista;
 
+import Controlador.DAO_Cierre;
+import Tools.Chart;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author user
  */
-public class JifCierre extends javax.swing.JInternalFrame {
+public final class JifCierre extends javax.swing.JInternalFrame {
+
+    private Chart objChart;
+    private DAO_Cierre objDataCierre;
 
     /**
      * Creates new form JifCierre
      */
     public JifCierre() {
         initComponents();
+        //setContentPane(this.createChartPanel());
+        this.objChart = new Chart();
+
+        this.pnl_Lapso.setVisible(false);
+
+        try {
+            this.objDataCierre = new DAO_Cierre();
+        } catch (SQLException ex) {
+            Logger.getLogger(JifCierre.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -27,25 +55,260 @@ public class JifCierre extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        pnlGrafica2 = new javax.swing.JPanel();
+        pnl_Grafica3 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        TBN_CierreDia = new javax.swing.JToggleButton();
+        TBN_CierreMes = new javax.swing.JToggleButton();
+        Btn_Especifico = new javax.swing.JButton();
+        pnl_Lapso = new javax.swing.JPanel();
+        Dch_Inicio = new com.toedter.calendar.JDateChooser();
+        Dch_Final = new com.toedter.calendar.JDateChooser();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        Btn_VerEspecifico = new javax.swing.JButton();
+
+        setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
+
+        javax.swing.GroupLayout pnlGrafica2Layout = new javax.swing.GroupLayout(pnlGrafica2);
+        pnlGrafica2.setLayout(pnlGrafica2Layout);
+        pnlGrafica2Layout.setHorizontalGroup(
+            pnlGrafica2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 800, Short.MAX_VALUE)
+        );
+        pnlGrafica2Layout.setVerticalGroup(
+            pnlGrafica2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 354, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Productos más vendidos", pnlGrafica2);
+
+        javax.swing.GroupLayout pnl_Grafica3Layout = new javax.swing.GroupLayout(pnl_Grafica3);
+        pnl_Grafica3.setLayout(pnl_Grafica3Layout);
+        pnl_Grafica3Layout.setHorizontalGroup(
+            pnl_Grafica3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 800, Short.MAX_VALUE)
+        );
+        pnl_Grafica3Layout.setVerticalGroup(
+            pnl_Grafica3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 354, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Ganancia en ventas", pnl_Grafica3);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Tipos de cierre"));
+
+        TBN_CierreDia.setText("Cierre del dia");
+        TBN_CierreDia.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                TBN_CierreDiaItemStateChanged(evt);
+            }
+        });
+
+        TBN_CierreMes.setText("Cierre del mes");
+        TBN_CierreMes.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                TBN_CierreMesItemStateChanged(evt);
+            }
+        });
+
+        Btn_Especifico.setText("Cierre especifico");
+        Btn_Especifico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_EspecificoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(TBN_CierreDia)
+                .addGap(10, 10, 10)
+                .addComponent(TBN_CierreMes)
+                .addGap(18, 18, 18)
+                .addComponent(Btn_Especifico)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TBN_CierreDia)
+                    .addComponent(TBN_CierreMes)
+                    .addComponent(Btn_Especifico))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        pnl_Lapso.setBorder(javax.swing.BorderFactory.createTitledBorder("Lapso del cierre"));
+
+        jLabel1.setText("Fecha Inicial: ");
+
+        jLabel2.setText("Fecha Final:");
+
+        Btn_VerEspecifico.setText("Ver");
+        Btn_VerEspecifico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_VerEspecificoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnl_LapsoLayout = new javax.swing.GroupLayout(pnl_Lapso);
+        pnl_Lapso.setLayout(pnl_LapsoLayout);
+        pnl_LapsoLayout.setHorizontalGroup(
+            pnl_LapsoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_LapsoLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(pnl_LapsoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(Dch_Inicio, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnl_LapsoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnl_LapsoLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(Dch_Final, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Btn_VerEspecifico))
+                    .addGroup(pnl_LapsoLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(2, 2, 2))
+        );
+        pnl_LapsoLayout.setVerticalGroup(
+            pnl_LapsoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_LapsoLayout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addGroup(pnl_LapsoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Btn_VerEspecifico)
+                    .addGroup(pnl_LapsoLayout.createSequentialGroup()
+                        .addGroup(pnl_LapsoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnl_LapsoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(Dch_Final, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Dch_Inicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(14, 14, 14))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(pnl_Lapso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnl_Lapso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Btn_EspecificoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_EspecificoActionPerformed
+        this.pnl_Lapso.setVisible(true);
+    }//GEN-LAST:event_Btn_EspecificoActionPerformed
+
+    private void Btn_VerEspecificoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_VerEspecificoActionPerformed
+        Date date_I = this.Dch_Inicio.getDate();
+        Date date_F = this.Dch_Final.getDate();
+        this.showCharts(date_I, date_F);
+        //System.out.println("Diferencia: " + this.calcularDiferencia(date_I, date_F));
+    }//GEN-LAST:event_Btn_VerEspecificoActionPerformed
+
+    private void TBN_CierreDiaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_TBN_CierreDiaItemStateChanged
+        try {
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            Date date_I = dt.parse("2019/08/04 08:00:00");
+            Date date_F = dt.parse("2019/08/06 18:00:00");
+            this.showCharts(date_I, date_F);
+        } catch (ParseException ex) {
+            Logger.getLogger(JifCierre.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_TBN_CierreDiaItemStateChanged
+
+    private void TBN_CierreMesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_TBN_CierreMesItemStateChanged
+
+        try {
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            Date date_I = dt.parse("2019/07/31 08:00:00");
+            Date date_F = dt.parse("2019/08/31 18:00:00");
+
+            this.showCharts(date_I, date_F);
+        } catch (ParseException ex) {
+            Logger.getLogger(JifCierre.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_TBN_CierreMesItemStateChanged
+    private void showCharts(Date fecha_I, Date fecha_F) {
+        try {
+            
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fecha_F);
+            int diferencia = this.calcularDiferencia(fecha_I, fecha_F);
+
+            if (diferencia >= 0) {
+                this.pnlGrafica2.removeAll();
+                this.pnlGrafica2.setLayout(new java.awt.BorderLayout());
+                this.pnlGrafica2.add(this.objChart.createSecondChartPanel(
+                        this.objDataCierre.getAllSoldProductsByDate(fecha_I, fecha_F, 10),
+                        fecha_F));
+                this.pnlGrafica2.validate();
+
+                this.pnl_Grafica3.removeAll();
+                this.pnl_Grafica3.setLayout(new java.awt.BorderLayout());
+
+                this.pnl_Grafica3.add(this.objChart.createChart(
+                        this.objDataCierre.getAllFacturas(fecha_I, fecha_F),
+                        fecha_I,
+                        fecha_F
+                ));
+                this.pnl_Grafica3.validate();
+            } else {
+                JOptionPane.showMessageDialog(this, "La fecha inicial no puede ser mayor a la final", "Error en las fechas", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JifCierre.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private int calcularDiferencia(Date fechaInicial, Date fechaFinal) {
+        return (int) ((fechaFinal.getTime() - fechaInicial.getTime()) / 86400000);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Btn_Especifico;
+    private javax.swing.JButton Btn_VerEspecifico;
+    private com.toedter.calendar.JDateChooser Dch_Final;
+    private com.toedter.calendar.JDateChooser Dch_Inicio;
+    private javax.swing.JToggleButton TBN_CierreDia;
+    private javax.swing.JToggleButton TBN_CierreMes;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel pnlGrafica2;
+    private javax.swing.JPanel pnl_Grafica3;
+    private javax.swing.JPanel pnl_Lapso;
     // End of variables declaration//GEN-END:variables
+
 }

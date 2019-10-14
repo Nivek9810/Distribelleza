@@ -6,8 +6,9 @@
  */
 package Vista;
 
-import Modelo.Excepciones;
+import Tools.Excepciones;
 import java.io.IOException;
+import javax.swing.JMenuBar;
 
 /**
  *
@@ -24,6 +25,7 @@ public class JfMain extends javax.swing.JFrame {
     private JifEmpleado obJifEmpleado;
     private JifLogin objJifLogin;
     private JifCierre objJifCierre;
+    private JifTestSession objJifTestCierre;
     private final Excepciones objExcepciones;
 
     public JfMain() {
@@ -31,14 +33,18 @@ public class JfMain extends javax.swing.JFrame {
         this.setExtendedState(JfMain.MAXIMIZED_BOTH);
         this.objExcepciones = new Excepciones();
 
-        this.objJifLogin = new JifLogin();
+        this.objJifLogin = new JifLogin(this.jdpEscritorio, this);
         if (this.objJifLogin.getObjPersona_Rol() == null) {
             this.MBR_Opciones.setEnabled(false);
+            //this.MBR_Opciones.setVisible(false);
         }
         this.objExcepciones.controlaInstancia(this.objJifLogin, this.jdpEscritorio);
         this.objJifLogin.setVisible(true);
     }
 
+    public JMenuBar getMBR_Opciones() {
+        return MBR_Opciones;
+    }    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,6 +62,7 @@ public class JfMain extends javax.swing.JFrame {
         jMIEliminarProd = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMIVerProducto = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -110,6 +117,14 @@ public class JfMain extends javax.swing.JFrame {
         jMIVerProducto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jMIVerProducto.setText("Ver Producto");
         jMenu1.add(jMIVerProducto);
+
+        jMenuItem3.setText("Test Sesion");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
 
         MBR_Opciones.add(jMenu1);
 
@@ -225,6 +240,13 @@ public class JfMain extends javax.swing.JFrame {
         this.objJifCierre.setClosable(true);
     }//GEN-LAST:event_jMIGenerarCierreActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+       this.objJifTestCierre = new JifTestSession(this.objJifLogin.getObjPersona_Rol());
+       this.objExcepciones.controlaInstancia(this.objJifTestCierre, this.jdpEscritorio);
+       this.objJifTestCierre.setVisible(true);
+       this.objJifTestCierre.setClosable(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     public void confGen(String Titulo) throws IOException {
         objJifProducto = new JifProducto(Titulo);
         objExcepciones.controlaInstancia(objJifProducto, this.jdpEscritorio);
@@ -300,6 +322,7 @@ public class JfMain extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JDesktopPane jdpEscritorio;
