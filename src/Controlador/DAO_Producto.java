@@ -5,6 +5,7 @@
  */
 package Controlador;
 
+import Modelo.AtributosVenta;
 import Modelo.DTO_Categoria;
 import Modelo.DTO_Marca;
 import Modelo.DTO_Producto;
@@ -25,8 +26,10 @@ public class DAO_Producto {
 
     //CRUD Producto
     private ArrayList<DTO_Producto> lista_Productos;
+    private ArrayList<AtributosVenta> datos_productos;
 
     private DTO_Producto objProducto;
+    private AtributosVenta objVenta;
     private DTO_Categoria objCategoria;
     private DAO_Categoria objDataCategoria;
     private DTO_Marca objMarca;
@@ -37,9 +40,11 @@ public class DAO_Producto {
     private Connection conection;
     private TimestampCertificates tc;
 
-    public DAO_Producto(ArrayList<DTO_Producto> lista_Productos, DTO_Producto objProducto, DTO_Categoria objCategoria, DAO_Categoria objDataCategoria, DTO_Marca objMarca, DAO_Marca objDataMarca, Statement statement, Conexion con, ResultSet resultSet, Connection conection, TimestampCertificates tc) {
+    public DAO_Producto(ArrayList<DTO_Producto> lista_Productos, ArrayList<AtributosVenta> datos_productos, DTO_Producto objProducto, AtributosVenta objVenta, DTO_Categoria objCategoria, DAO_Categoria objDataCategoria, DTO_Marca objMarca, DAO_Marca objDataMarca, Statement statement, Conexion con, ResultSet resultSet, Connection conection, TimestampCertificates tc) {
         this.lista_Productos = lista_Productos;
+        this.datos_productos = datos_productos;
         this.objProducto = objProducto;
+        this.objVenta = objVenta;
         this.objCategoria = objCategoria;
         this.objDataCategoria = objDataCategoria;
         this.objMarca = objMarca;
@@ -53,6 +58,7 @@ public class DAO_Producto {
 
     public DAO_Producto() throws SQLException {
         this.lista_Productos = new ArrayList<>();
+        this.objVenta = new AtributosVenta();
         this.objProducto = new DTO_Producto();
         this.objCategoria = new DTO_Categoria();
         this.objMarca = new DTO_Marca();
@@ -167,6 +173,20 @@ public class DAO_Producto {
             );
         }
         return this.lista_Productos;
+    }
+
+    public AtributosVenta vistaVenta(String id_prod) throws SQLException {
+        this.objVenta = null;
+        String query = "SELECT id_producto,nombre,(precio_compra+(precio_compra*porcentaje_venta)) as Precio_Compra FROM PRODUCTO "
+                + "WHERE id_producto = '" + id_prod + "';";
+        this.resultSet = this.statement.executeQuery(query);
+        while (this.resultSet.next()) {
+            this.objVenta = new AtributosVenta(
+                    this.resultSet.getString("Id_Producto"),
+                    this.resultSet.getString("Nombre"),
+                    (int) this.resultSet.getInt("Precio_Compra"));
+        }
+        return this.objVenta;
     }
 
 }

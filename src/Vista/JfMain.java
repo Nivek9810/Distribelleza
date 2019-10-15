@@ -7,6 +7,10 @@
 package Vista;
 
 import Tools.Excepciones;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import javax.swing.table.DefaultTableModel;
+import Tools.Excepciones;
 import java.io.IOException;
 import javax.swing.JMenuBar;
 
@@ -22,6 +26,7 @@ public class JfMain extends javax.swing.JFrame {
     private JifProducto objJifProducto;
     private JifFactura objJifFactura;
     private JifListar_Productos obJifListar_Productos;
+    private JifListar_Facturas obJifListar_Facturas;
     private JifEmpleado obJifEmpleado;
     private JifLogin objJifLogin;
     private JifCierre objJifCierre;
@@ -116,6 +121,11 @@ public class JfMain extends javax.swing.JFrame {
 
         jMIVerProducto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jMIVerProducto.setText("Ver Producto");
+        jMIVerProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIVerProductoActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMIVerProducto);
 
         jMenuItem3.setText("Test Sesion");
@@ -327,4 +337,14 @@ public class JfMain extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JDesktopPane jdpEscritorio;
     // End of variables declaration//GEN-END:variables
+
+    private void menuFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFacturaActionPerformed
+        this.obJifListar_Facturas = new JifListar_Facturas();
+        this.objExcepciones.controlaInstancia(this.obJifListar_Facturas, this.jdpEscritorio);
+    }//GEN-LAST:event_menuFacturaActionPerformed
+
+    private void jMIVerProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIVerProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMIVerProductoActionPerformed
+
 }
