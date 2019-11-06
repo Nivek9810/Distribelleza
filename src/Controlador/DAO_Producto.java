@@ -156,7 +156,7 @@ public class DAO_Producto {
 
     public ArrayList<DTO_Producto> getProductosByQuery(String nombre, boolean state) throws SQLException {
         this.lista_Productos.clear();
-        String query = "SELECT * FROM PRODUCTO "
+        String query = "SELECT * FROM PRODUCTO ORDER BY id_producto asc "
                 + "WHERE Nombre LIKE '%" + nombre + "%' AND Activo = " + state + ";";
         this.resultSet = this.statement.executeQuery(query);
         while (this.resultSet.next()) {

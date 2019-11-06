@@ -121,6 +121,12 @@ public class Excepciones {
                 &&!correo.equals("")
                 && !Txttotal.getText().trim().equals(""));
     }
+     
+     public boolean validarCamposFacturaProd(String producto,String idFactProd,  int cant) {
+        return (!producto.equals("")
+                &&!idFactProd.equals("")
+                && cant!=0);
+    }
 
     /**
      *
@@ -150,6 +156,12 @@ public class Excepciones {
                 &&!fecha.equals(Color.red)
                 &&!correo.equals(Color.red)
                 && !Txttotal.getText().trim().equals(Color.red));
+    }
+    
+    public boolean validarCamposErrFacturaProd(String producto,String idFactProd,  int cant) {
+        return (!producto.equals(Color.red)
+                &&!idFactProd.equals(Color.red)
+                &&  cant != 0);
     }
     
     public boolean validarCamposErrPersona(JTextField TxtIdEmp, JTextField TxtNombreEmp, JDateChooser TxtFechaNacEmp, JTextField TxtTelEmp, JTextField TxtDirEmp) {

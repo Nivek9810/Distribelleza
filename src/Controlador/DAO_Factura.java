@@ -90,7 +90,7 @@ public class DAO_Factura {
     
     public DTO_Factura getSingleFactura(String id) throws SQLException {
         this.obj_Factura = null;
-        String Consulta = "SELECT * FROM FACTURA WHERE ID_PRODUCTO = '" + id + "';";
+        String Consulta = "SELECT * FROM FACTURA WHERE id_producto = '" + id + "';";
         this.resultSet = this.statement.executeQuery(Consulta);
         while (resultSet.next()) {
             this.obj_Factura = new DTO_Factura(this.resultSet.getString("Id_Factura"),
@@ -102,6 +102,8 @@ public class DAO_Factura {
         }
         return this.obj_Factura;
     }
+    
+    
     
     public ArrayList<DTO_Factura> getAllSales() throws SQLException {
         this.lista_venta.clear();
