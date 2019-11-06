@@ -40,6 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -271,40 +272,31 @@ public class JifFactura extends javax.swing.JInternalFrame {
                     .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SpnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnAgregar))
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void TxtProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtProductoActionPerformed
+        //this.SpnCantidad.setValue(1); 
         try {
-            //TxtTotalCompra.setText("");
+            int cant = 1;
             TablaVentas.getSelectionModel().clearSelection();
             DefaultTableModel modelo = new DefaultTableModel();
-            boolean ban;
             for (int i = 0; i < TablaVentas.getRowCount(); i++) {
                 if ((TablaVentas.getValueAt(i, 0).toString()).equals(TxtProducto.getText())) {
-                    int cant = Integer.parseInt(TablaVentas.getValueAt(i, 2).toString()) + 1;
-                    //TablaVentas.setValueAt(title, i, 2)=cant;
-                    this.SpnCantidad.setValue(cant);
-                    // int filaSelect = TablaVentas.getSelectedRow();
-                    //DefaultTableModel dtm = (DefaultTableModel) TablaVentas.getModel(); 
-                    //modelo.setValueAt(i, 2, cant);
+                    cant = Integer.parseInt(TablaVentas.getValueAt(i, 2).toString()) + 1;
                     TablaVentas.getSelectionModel().addSelectionInterval(i, i);
                     this.modelo.removeRow(TablaVentas.getSelectedRow());
-                    //TablaVentas.remove(filaSelect);    
-//                    modelo=(DefaultTableModel) TablaVentas.getModel();
-//                    int fila=(int)modelo.getValueAt(filaSelect, i);
-//                    modelo.removeRow(fila);
-
+                    this.SpnCantidad.setValue(cant);
                 }
             }
             this.search();
-            this.TxtProducto.setText("");
-            //int filaSelect = TablaVentas.getSelectedRow();
             TablaVentas.getSelectionModel().addSelectionInterval(TablaVentas.getRowCount() - 1, TablaVentas.getRowCount() - 1);
             TotalVenta();
+            this.TxtProducto.setText("");
+            this.SpnCantidad.setValue(cant);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Este producto no se encuentra registrado");
             this.TxtProducto.setText("");
@@ -351,6 +343,16 @@ public class JifFactura extends javax.swing.JInternalFrame {
 
     }
 
+    public void limpiarTabla() {
+
+        int a = modelo.getRowCount() - 1;
+        System.out.println(a);
+        for (int i = a; i >= 0; i--) {
+            System.out.println(i);
+            modelo.removeRow(i);
+        }
+    }
+
     public void eventos(java.awt.event.KeyEvent evt) {
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             SpnCantidad.setValue((int) SpnCantidad.getValue() + 1);
@@ -387,7 +389,7 @@ public class JifFactura extends javax.swing.JInternalFrame {
                         Double.parseDouble(this.TxtTotalCompra.getText())
                 ))) {
                     JOptionPane.showMessageDialog(this, "¡El producto " + objfactpdf.idFactura() + " se ha registrado con éxito!", "Registro de producto", JOptionPane.INFORMATION_MESSAGE);
-
+                    limpiarTabla();
                 } else {
                     JOptionPane.showMessageDialog(this, "Algo salió mal", "Registro de producto", JOptionPane.ERROR_MESSAGE);
                 }
@@ -458,7 +460,6 @@ public class JifFactura extends javax.swing.JInternalFrame {
 
         try {
             this.saleList.clear();
-            this.SpnCantidad.setValue(1);
 //            System.out.println("Texto ");
             this.objVentas = this.objDataProducto.vistaVenta(this.TxtProducto.getText());
             this.objVentas.setCant((int) this.SpnCantidad.getValue());
