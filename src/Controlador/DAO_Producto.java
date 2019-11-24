@@ -9,7 +9,7 @@ import Modelo.AtributosVenta;
 import Modelo.DTO_Categoria;
 import Modelo.DTO_Marca;
 import Modelo.DTO_Producto;
-import Modelo.TimestampCertificates;
+import Tools.TimestampCertificates;
 import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.ResultSet;

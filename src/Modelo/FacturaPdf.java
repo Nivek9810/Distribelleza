@@ -5,6 +5,7 @@
  */
 package Modelo;
 
+import Tools.Excepciones;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import java.awt.*;

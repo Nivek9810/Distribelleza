@@ -8,7 +8,7 @@ package Controlador;
 import Modelo.DTO_Persona;
 import Modelo.DTO_Persona_Rol;
 import Modelo.DTO_Rol;
-import Modelo.TimestampCertificates;
+import Tools.TimestampCertificates;
 import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -114,5 +114,14 @@ public class DAO_Persona_Rol {
             this.lista_Roles.add(this.objDataRol.getSingleRol(this.resultSet.getInt("Id_Rol"), true));
         }
         return this.lista_Roles;
+    }
+
+    public boolean changePassword(String contrasena, String DNI, int Rol) throws SQLException {
+        String update = "UPDATE PERSON_ROL "
+                + "SET Contrasena = '" + contrasena + "'"
+                + "WHERE DNI = '" + DNI + "' "
+                + "AND Rol = " + Rol + ";";
+
+        return this.statement.executeUpdate(update) > 0;
     }
 }

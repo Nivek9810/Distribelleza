@@ -7,11 +7,14 @@ package Vista;
 
 import Controlador.DAO_Factura;
 import Modelo.DTO_Factura;
-import Modelo.Excepciones;
+import Tools.Excepciones;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import java.beans.PropertyVetoException;
+
+
+
 
 import java.security.Timestamp;
 import java.sql.SQLException;
@@ -26,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author MARCELO RUENES
  */
-public class JifListar_Facturas extends javax.swing.JInternalFrame {
+    public class JifListar_Facturas extends javax.swing.JInternalFrame {
 
     private final DefaultTableModel modelo;
     private JifFactura jifFactura;
@@ -42,7 +45,7 @@ public class JifListar_Facturas extends javax.swing.JInternalFrame {
         this.objExcepciones = new Excepciones();
 
         this.SaleList = new ArrayList<>();
-
+        
         modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int col) {
@@ -80,6 +83,7 @@ public class JifListar_Facturas extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         Tbl_Facturas = new javax.swing.JTable();
         TxtBuscarFact = new javax.swing.JTextField();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
 
         Tbl_Facturas.setModel(new javax.swing.table.DefaultTableModel(
@@ -95,12 +99,6 @@ public class JifListar_Facturas extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(Tbl_Facturas);
 
-        TxtBuscarFact.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TxtBuscarFactActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Buscar factura :");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -108,35 +106,36 @@ public class JifListar_Facturas extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(TxtBuscarFact, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(TxtBuscarFact, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(57, 57, 57)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(43, 43, 43)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TxtBuscarFact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(TxtBuscarFact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(308, Short.MAX_VALUE))
+                .addContainerGap(304, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void TxtBuscarFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtBuscarFactActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TxtBuscarFactActionPerformed
-    private void Txt_SearchActionPerformed(java.awt.event.ActionEvent evt) {
+private void Txt_SearchActionPerformed(java.awt.event.ActionEvent evt) {
         this.search();
         this.TxtBuscarFact.setText("");
     }
@@ -149,12 +148,14 @@ public class JifListar_Facturas extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Tbl_Facturas;
     private javax.swing.JTextField TxtBuscarFact;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    private void addRows() {
-        this.SaleList.forEach(Factura -> {
+    
+     private void addRows() {
+         this.SaleList.forEach(Factura -> {
             this.modelo.addRow(new Object[]{
                 Factura.getId_Factura(),
                 Factura.getPersona().getNombre(),
@@ -178,5 +179,5 @@ public class JifListar_Facturas extends javax.swing.JInternalFrame {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
 }

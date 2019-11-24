@@ -8,7 +8,7 @@ package Controlador;
 import Modelo.DTO_Factura;
 import Modelo.DTO_Persona;
 import Modelo.DTO_Persona_Rol;
-import Modelo.TimestampCertificates;
+import Tools.TimestampCertificates;
 import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.ResultSet;
