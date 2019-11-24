@@ -49,7 +49,8 @@ public class JfMain extends javax.swing.JFrame {
 
     public JMenuBar getMBR_Opciones() {
         return MBR_Opciones;
-    }    
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -156,6 +157,11 @@ public class JfMain extends javax.swing.JFrame {
         jMenu5.setText("Consultar");
 
         jMenuItem2.setText("Ver Facturas");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu5.add(jMenuItem2);
 
         jMenu3.add(jMenu5);
@@ -251,10 +257,10 @@ public class JfMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jMIGenerarCierreActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-       this.objJifTestCierre = new JifTestSession(this.objJifLogin.getObjPersona_Rol());
-       this.objExcepciones.controlaInstancia(this.objJifTestCierre, this.jdpEscritorio);
-       this.objJifTestCierre.setVisible(true);
-       this.objJifTestCierre.setClosable(true);
+        this.objJifTestCierre = new JifTestSession(this.objJifLogin.getObjPersona_Rol());
+        this.objExcepciones.controlaInstancia(this.objJifTestCierre, this.jdpEscritorio);
+        this.objJifTestCierre.setVisible(true);
+        this.objJifTestCierre.setClosable(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     public void confGen(String Titulo) throws IOException {
@@ -346,5 +352,12 @@ public class JfMain extends javax.swing.JFrame {
     private void jMIVerProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIVerProductoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMIVerProductoActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        this.obJifListar_Facturas = new JifListar_Facturas();
+        this.objExcepciones.controlaInstancia(this.obJifListar_Facturas, this.jdpEscritorio);
+        this.obJifListar_Facturas.setVisible(true);
+        this.obJifListar_Facturas.setClosable(true);      //this.obJifListar_Facturas.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
 }

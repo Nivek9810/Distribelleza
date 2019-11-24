@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author MARCELO RUENES
  */
-public class JifListar_Facturas extends javax.swing.JInternalFrame {
+    public class JifListar_Facturas extends javax.swing.JInternalFrame {
 
     private final DefaultTableModel modelo;
     private JifFactura jifFactura;
