@@ -61,7 +61,7 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         }
 
         //asignamos el modelo a nuestro jtable
-        this.Tbl_Productos.setModel(modelo);
+        this.Tbl_Productos.setModel(modelo); 
         this.addRows();
 
     }
@@ -262,7 +262,6 @@ public class JifListar_Productos extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Debes seleccionar un elemento de la lista.", "¡Adventencia!", JOptionPane.WARNING_MESSAGE);
         }
-        //System.out.println("Selected: " + this.Tbl_Productos.getSelectedRow());
     }//GEN-LAST:event_Btn_EditarActionPerformed
 
     private void btnEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnEstadoItemStateChanged

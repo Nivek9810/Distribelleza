@@ -74,15 +74,15 @@ public class DAO_Factura {
     public ArrayList<DTO_Factura> getFacturasByQuery(String id_fac) throws SQLException {
         this.lista_venta.clear();
         String query = "SELECT * FROM FACTURA "
-                + "WHERE id_factura = '" + id_fac+ "';";
+                + "WHERE id_factura like '%" + id_fac+ "%';";
         this.resultSet = this.statement.executeQuery(query);
         while (this.resultSet.next()) {
             this.lista_venta.add(new DTO_Factura(
-                    this.resultSet.getString("Id_Factura"),
-                    this.objDatapersona.getSinglePersona(this.resultSet.getString("Persona"), true),//state
-                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha").getTime()), this.tc.getCertPath()),
-                    this.resultSet.getString("Correo"),
-                    (double) this.resultSet.getInt("Total_Factura"))
+                    this.resultSet.getString("id_factura"),
+                    this.objDatapersona.getSinglePersona(this.resultSet.getString("id_persona"), true),//state
+                    new Timestamp(new Date(this.resultSet.getTimestamp("fecha").getTime()), this.tc.getCertPath()),
+                    this.resultSet.getString("correo"),
+                    (double) this.resultSet.getInt("gran_total"))
             );
         }
         return this.lista_venta;
@@ -90,14 +90,14 @@ public class DAO_Factura {
     
     public DTO_Factura getSingleFactura(String id) throws SQLException {
         this.obj_Factura = null;
-        String Consulta = "SELECT * FROM FACTURA WHERE id_producto = '" + id + "';";
+        String Consulta = "SELECT * FROM FACTURA WHERE id_factura = '" + id + "';";
         this.resultSet = this.statement.executeQuery(Consulta);
         while (resultSet.next()) {
-            this.obj_Factura = new DTO_Factura(this.resultSet.getString("Id_Factura"),
-                    this.objDatapersona.getSinglePersona(this.resultSet.getString("dni"), true),//state
-                    new Timestamp(new Date(this.resultSet.getTimestamp("Fecha").getTime()), this.tc.getCertPath()),
-                    this.resultSet.getString("Correo"),
-                    (double) this.resultSet.getInt("Precio_Compra"));
+            this.obj_Factura = new DTO_Factura(this.resultSet.getString("id_factura"),
+                    this.objDatapersona.getSinglePersona(this.resultSet.getString("id_persona"), true),//state
+                    new Timestamp(new Date(this.resultSet.getTimestamp("fecha").getTime()), this.tc.getCertPath()),
+                    this.resultSet.getString("correo"),
+                    (double) this.resultSet.getInt("gran_total"));
 
         }
         return this.obj_Factura;
@@ -110,10 +110,6 @@ public class DAO_Factura {
         String query = "SELECT * FROM FACTURA;";
         this.resultSet = this.statement.executeQuery(query);
         while (this.resultSet.next()) {
-            /*
-            String Id_Producto, DTO_Marca Marca, DTO_Categoria Categoria, String Nombre, 
-            double Precio_Compra, int Cantidad, double Porcentaje_Venta, Timestamp Fecha_de_Carga
-             */
             this.lista_venta.add(new DTO_Factura(
                     this.resultSet.getString("Id_Factura"),
                     this.objDatapersona.getSinglePersona(this.resultSet.getString("id_persona"), true),//state

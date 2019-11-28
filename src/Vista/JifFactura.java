@@ -298,13 +298,15 @@ public class JifFactura extends javax.swing.JInternalFrame {
             if ((int) this.SpnCantidad.getValue() == 0) {
                 modelo.removeRow(filaSelect);
                 TablaVentas.getSelectionModel().addSelectionInterval(TablaVentas.getRowCount() - 1, TablaVentas.getRowCount() - 1);
-                
+                this.SpnCantidad.setValue(TablaVentas.getValueAt(TablaVentas.getSelectedRow(), 2));
+
             } else {
                 //this.SpnCantidad.setValue(TablaVentas.getValueAt(filaSelect, 2));
                 this.objVentas.setCant((int) this.SpnCantidad.getValue());
                 this.objVentas.setTotal((int) this.SpnCantidad.getValue() * objVentas.getPrecio_unidad());
-                modelo.removeRow(filaSelect);
+
                 this.addRows();
+                modelo.removeRow(filaSelect);
                 TablaVentas.getSelectionModel().addSelectionInterval(TablaVentas.getRowCount() - 1, TablaVentas.getRowCount() - 1);
             }
         }
@@ -335,9 +337,7 @@ public class JifFactura extends javax.swing.JInternalFrame {
     public void limpiarTabla() {
 
         int a = modelo.getRowCount() - 1;
-        System.out.println(a);
         for (int i = a; i >= 0; i--) {
-            System.out.println(i);
             modelo.removeRow(i);
         }
     }
@@ -428,7 +428,6 @@ public class JifFactura extends javax.swing.JInternalFrame {
 
     private void SpnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_SpnCantidadStateChanged
         ModificarPorSpinner();
-        //TotalVenta();
     }//GEN-LAST:event_SpnCantidadStateChanged
 
     private void SpnCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SpnCantidadKeyPressed
@@ -436,8 +435,10 @@ public class JifFactura extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_SpnCantidadKeyPressed
 
     private void TablaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaVentasMouseClicked
-
+        //TablaVentas.getSelectionModel().;
         this.SpnCantidad.setValue(TablaVentas.getValueAt(TablaVentas.getSelectedRow(), 2));
+        //TablaVentas.getSelectionModel().addSelectionInterval(TablaVentas.getRowCount() - 1, TablaVentas.getRowCount() - 1);
+
 
     }//GEN-LAST:event_TablaVentasMouseClicked
 
