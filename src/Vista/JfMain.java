@@ -27,7 +27,8 @@ public class JfMain extends javax.swing.JFrame {
     private JifFactura objJifFactura;
     private JifListar_Productos obJifListar_Productos;
     private JifListar_Facturas obJifListar_Facturas;
-    private JifEmpleado obJifEmpleado;
+    private JifListar_Personas obJifListar_Personas;
+    private JifPersona obJifEmpleado;
     private JifLogin objJifLogin;
     private JifCierre objJifCierre;
     private JifTestSession objJifTestCierre;
@@ -77,6 +78,7 @@ public class JfMain extends javax.swing.JFrame {
         jMenu6 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
         ItemAgregEmp = new javax.swing.JMenuItem();
+        ItemAgregEmp1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMCierre = new javax.swing.JMenu();
         jMIGenerarCierre = new javax.swing.JMenuItem();
@@ -181,6 +183,15 @@ public class JfMain extends javax.swing.JFrame {
         });
         jMenu7.add(ItemAgregEmp);
 
+        ItemAgregEmp1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        ItemAgregEmp1.setText("Listar Persona");
+        ItemAgregEmp1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemAgregEmp1ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(ItemAgregEmp1);
+
         jMenu6.add(jMenu7);
 
         MBR_Opciones.add(jMenu6);
@@ -243,7 +254,7 @@ public class JfMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jMIEliminarProdActionPerformed
 
     private void ItemAgregEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemAgregEmpActionPerformed
-        this.obJifEmpleado = new JifEmpleado();
+        this.obJifEmpleado = new JifPersona();
         this.objExcepciones.controlaInstancia(obJifEmpleado, jdpEscritorio);
         this.obJifEmpleado.setVisible(true);
         this.obJifEmpleado.setClosable(true);
@@ -322,6 +333,7 @@ public class JfMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ItemAgregEmp;
+    private javax.swing.JMenuItem ItemAgregEmp1;
     private javax.swing.JMenuBar MBR_Opciones;
     private javax.swing.JMenu jMAccionProd;
     private javax.swing.JMenu jMCierre;
@@ -359,5 +371,12 @@ public class JfMain extends javax.swing.JFrame {
         this.obJifListar_Facturas.setVisible(true);
         this.obJifListar_Facturas.setClosable(true);      //this.obJifListar_Facturas.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void ItemAgregEmp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemAgregEmp1ActionPerformed
+        this.obJifListar_Personas= new JifListar_Personas();
+        this.objExcepciones.controlaInstancia(this.obJifListar_Personas, this.jdpEscritorio);
+        this.obJifListar_Personas.setVisible(true);
+        this.obJifListar_Personas.setClosable(true);     
+    }//GEN-LAST:event_ItemAgregEmp1ActionPerformed
 
 }

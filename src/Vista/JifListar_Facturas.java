@@ -173,7 +173,7 @@ public class JifListar_Facturas extends javax.swing.JInternalFrame {
             TotalFacturaSeleccionada= Tbl_Facturas.getValueAt(Tbl_Facturas.getSelectedRow(), 4).toString();
             String idFactura =Tbl_Facturas.getValueAt(Tbl_Facturas.getSelectedRow(), 2).toString();
             this.objconsultaFactProd = new JifConsultaFactura();
-            this.objconsultaFactProd.setVisible(true);   
+            this.objconsultaFactProd.setVisible(true);
         } else if   (evt.getClickCount() == 1) {
             this.objconsultaFactProd.setVisible(false);
         } 

@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
  *
  * @author MARCELO RUENES
  */
-public class JifEmpleado extends javax.swing.JInternalFrame {
+public class JifPersona extends javax.swing.JInternalFrame {
 
     private Excepciones objExcepciones;
     private DAO_Rol objDataRol;
@@ -31,12 +31,12 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
     /**
      * Creates new form JifEmpleado
      */
-    public JifEmpleado() {
+    public JifPersona() {
         initComponents();
         try {
             fillCbxRol();
         } catch (SQLException ex) {
-            Logger.getLogger(JifEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JifPersona.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -267,7 +267,7 @@ public class JifEmpleado extends javax.swing.JInternalFrame {
                     try {
                         this.fillData(this.objDataPersona.getSinglePersona(this.TxtIdEmp.getText(), true));
                     } catch (SQLException exSP) {
-                        Logger.getLogger(JifEmpleado.class.getName()).log(Level.SEVERE, null, exSP);
+                        Logger.getLogger(JifPersona.class.getName()).log(Level.SEVERE, null, exSP);
                     }
                 }
             } else {

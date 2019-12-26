@@ -31,6 +31,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.security.Timestamp;
 import java.sql.SQLException;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.PrintException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -386,14 +388,15 @@ public class JifFactura extends javax.swing.JInternalFrame {
         TxtTotalCompra.setText("");
     }
 
-    public void opcion_recibo() {
+    public void opcion_recibo() throws FileNotFoundException, PrintException {
         String[] opciones = {"SI", "NO", "Regresar"};
         int seleccion = JOptionPane.showOptionDialog(null, "Desea imprimir recibo de la venta?",
                 "Es necesario que seleccione una opcion", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
         if (seleccion == 0) {
-            generar_venta();
             factura.crear_PDF(Total, TablaVentas);
+            generar_venta();
+            factura.impresion_automatica();
         } else if (seleccion == 1) {
             generar_venta();
         } else if (seleccion == 2) {
@@ -423,7 +426,13 @@ public class JifFactura extends javax.swing.JInternalFrame {
     }
 
     private void BtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarActionPerformed
-        opcion_recibo();
+        try {
+            opcion_recibo();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PrintException ex) {
+            Logger.getLogger(JifFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_BtnAgregarActionPerformed
 
     private void SpnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_SpnCantidadStateChanged
