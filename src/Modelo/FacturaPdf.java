@@ -150,9 +150,9 @@ public class FacturaPdf {
 
       FileInputStream inputStream = null;
         try {
-           // inputStream = new FileInputStream("C:\\Users\\MARCELO RUENES\\Documents\\Fact#" + idfactura+".pdf");
-            inputStream = new FileInputStream("C:\\Users\\MARCELO RUENES\\Documents\\mama.txt");
-        } catch (FileNotFoundException ex) {
+            inputStream = new FileInputStream("C:\\Users\\MARCELO RUENES\\Documents\\Fact#" +idfactura+".pdf");
+            //inputStream = new FileInputStream("C:\\Users\\MARCELO RUENES\\Documents\\iwfebWEFBWEBG.pdf");
+         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
         if (inputStream == null) {
